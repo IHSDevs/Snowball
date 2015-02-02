@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 697c03d5be4c242afb96fab0893834a1
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - SnowMan: {fileID: 100000, guid: 899bc4b6c9dbe44b8aeaba506af1455d, type: 2}
+  - myTransform: {instanceID: 0}
+  - ExplosionPrefab: {fileID: 100006, guid: 73896e083d60c481bbccc3569760a05c, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 

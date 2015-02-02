@@ -1,0 +1,16 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GameOverManager.cs">
+    <Files>
+      <File FileName="Assets/Scripts/SnowmanController.cs" Line="27" Column="27" />
+      <File FileName="Assets/Scripts/Spawn.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/HealthPlayer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/SnowballController.cs" Line="84" Column="29" />
+      <File FileName="Assets/GameOverManager.cs" Line="24" Column="50" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
