@@ -2,23 +2,33 @@
 using System.Collections;
 
 public class Movement : MonoBehaviour {
-
-	public float howClose = 2.5f;
-	public Transform player;
+	
+	public float howClose = 1f;
 	public float speed = 10f;
+	
+	Vector3 waypoint;
 	// Use this for initialization
 	void Start () {
-
+		waypoint = new Vector3 (0, 0, 0);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Vector3 playerPosition = new Vector3 (player.position.x,transform.position.y,player.position.z);
-		if (Vector3.Distance (transform.position, player.position) > howClose) 
+		if (Vector3.Distance (transform.position, waypoint) > howClose) 
 		{
 			float step = speed * Time.deltaTime;
-			transform.position = Vector3.MoveTowards(transform.position, playerPosition, step);
-			
+			transform.position = Vector3.MoveTowards(transform.position, waypoint, step);
 		}
+	}
+	
+	public Vector3 getPosition()
+	{
+		print ("transform reset");
+		return transform.position;
+	}
+	
+	public void setWaypoint(Vector3 pos)
+	{
+		waypoint = pos;
 	}
 }
