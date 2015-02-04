@@ -34,7 +34,7 @@ public class WaypointController: MonoBehaviour {
 				else
 				{
 					GameObject obj = ((GameObject)travellers[j]);
-					Vector3 position = obj.GetComponent<Movement>().getPosition();
+					Vector3 position = obj.GetComponent<Jump>().getPosition();
 					if (Vector3.Distance (waypoints [i].transform.position, position) < waypoints [i].GetComponent<Waypoint> ().radius)
 						incrementWaypoint(i, obj);
 				}
@@ -44,7 +44,7 @@ public class WaypointController: MonoBehaviour {
 	
 	public void addTraveller(GameObject traveller)
 	{
-		traveller.GetComponent<Movement>().setWaypoint(waypoints[0].transform.position);
+		traveller.GetComponent<Jump>().setWaypoint(waypoints[0].transform.position);
 		travellers.Add (traveller);
 	}
 	
@@ -52,7 +52,7 @@ public class WaypointController: MonoBehaviour {
 	{
 		if (waypointNum == waypoints.Length - 1)
 			waypointNum -= 1;
-		obj.GetComponent<Movement> ().setWaypoint (waypoints [waypointNum + 1].transform.position);
+		obj.GetComponent<Jump> ().setWaypoint (waypoints [waypointNum + 1].transform.position);
 	}
 	
 }
