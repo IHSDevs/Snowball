@@ -41,7 +41,7 @@ public class Jump : MonoBehaviour {
 			//float step = speed * Time.deltaTime;
 			//transform.position = Vector3.MoveTowards(transform.position, waypoint, step);
 
-			jumpVector = Quaternion.AngleAxis(-45, Vector3.Cross(Vector3.up, direction) ) *direction.normalized*jumpMagnitude ;
+			jumpVector = Quaternion.AngleAxis(-60, Vector3.Cross(Vector3.up, direction) ) *direction.normalized*jumpMagnitude ;
 			Debug.DrawLine (transform.position, transform.position + jumpVector, Color.green, 5, true);
 			print (jumpVector);
 			timer = 5f;
