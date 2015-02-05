@@ -6,8 +6,12 @@ public class Jump : MonoBehaviour {
 	public float howClose = 1f;
 	public float speed = 10f;
 
-	float jumpMagnitude = 5f;
+	public float jumpMagnitude = 5f;
+	public float jumpAngle;
+
 	float timer = 0f;
+
+	float height = 1;
 	
 	Vector3 waypoint;
 	Vector3 jumpVector = new Vector3(0,0,0);
@@ -17,9 +21,9 @@ public class Jump : MonoBehaviour {
 
 	bool grounded;
 
-	LayerMask layerMask = ~2;
+	LayerMask layerMask = ~12;
 
-	//RaycastHit hit;
+	RaycastHit hit;
 
 	// Use this for initialization
 	void Start () {
@@ -30,7 +34,9 @@ public class Jump : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		grounded = Physics.Raycast (transform.position + Vector3.up, transform.TransformDirection (Vector3.down), 1f, layerMask);
+		grounded = Physics.Raycast (transform.position + Vector3.up, transform.TransformDirection (Vector3.down), out hit, height, layerMask);
+
+		Debug.DrawLine (transform.position + Vector3.up, transform.position, Color.green, .1f, true);
 
 		direction = (waypoint - transform.position);
 		direction.y = 0;
@@ -41,9 +47,8 @@ public class Jump : MonoBehaviour {
 			//float step = speed * Time.deltaTime;
 			//transform.position = Vector3.MoveTowards(transform.position, waypoint, step);
 
-			jumpVector = Quaternion.AngleAxis(-60, Vector3.Cross(Vector3.up, direction) ) *direction.normalized*jumpMagnitude ;
-			Debug.DrawLine (transform.position, transform.position + jumpVector, Color.green, 5, true);
-			print (jumpVector);
+			jumpVector = Quaternion.AngleAxis(-(jumpAngle), Vector3.Cross(Vector3.up, direction) ) *direction.normalized*jumpMagnitude ;
+
 			timer = 5f;
 
 		}
@@ -60,5 +65,20 @@ public class Jump : MonoBehaviour {
 	public void setWaypoint(Vector3 pos)
 	{
 		waypoint = pos;
+	}
+
+	public void setHeight(float newHeight)
+	{
+		height = newHeight;
+	}
+
+	public void setJumpMagnitude(float mag)
+	{
+		jumpMagnitude = mag;
+	}
+
+	public void setJumpAngle(float angle)
+	{
+		jumpAngle = angle;
 	}
 }
