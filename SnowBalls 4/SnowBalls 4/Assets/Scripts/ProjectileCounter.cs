@@ -1,14 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class ProjectileCounter : MonoBehaviour {
 
 	int hits = 0;
-
-
-	void Start()
-	{
-	}
 
 	public int getHits()
 	{

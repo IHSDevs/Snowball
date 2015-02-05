@@ -15,6 +15,10 @@ public class SnowmanController : MonoBehaviour {
 
 	public Jump myJump;
 
+	public Transform GibNose;
+	public Transform GibEye;
+	public Transform GibButton;
+
 	private int headCount = 0;
 	private int bodyCount = 0;
 	private int legsCount = 0;
@@ -31,23 +35,24 @@ public class SnowmanController : MonoBehaviour {
 	public ProjectileCounter bodyCounter;
 	public ProjectileCounter legsCounter;
 
-	bool hasLegs = true;
 
-	// Update is called once per frame
+	bool hasHead = true;
+	bool hasLegs = true;
+	
 	void Update () {
 
 		if (hasLegs && legsCount > 0) {
-			//Destroy (legs.gameObject);
+
 			legs.gameObject.SetActive(false);
 			myJump.setHeight(.5f);
-			myJump.setJumpMagnitude(1.5f);
-			myJump.setJumpAngle(0f);
-			//head.position -= new Vector3 (0,1,0);
-			//body.position -= new Vector3 (0,1,0);
+			myJump.setJumpMagnitude(3f);
+			myJump.setJumpAngle(70f);
 
 			Instantiate (explosion, transform.position + Vector3.up*.5f, transform.rotation);
 
 			hasLegs = false;
+
+			Instantiate(GibNose, transform.position, transform.rotation);
 		}
 
 
@@ -59,21 +64,46 @@ public class SnowmanController : MonoBehaviour {
 			health = 0;
 		}
 
+		if (hasHead && headCount > 0) {
 
+			hasHead = false;
 
-		//int children = 0;
+			head.gameObject.SetActive(false);
 
+			Instantiate(GibNose, transform.position, transform.rotation);
+			Instantiate(GibEye, transform.position, transform.rotation);
+			Instantiate(GibButton, transform.position, transform.rotation);
+			Instantiate(GibButton, transform.position, transform.rotation);
+			Instantiate(GibButton, transform.position, transform.rotation);
 
+			//Destroy(myJump);
+			myJump.setJumpMagnitude(0f);
 
-		//explode snowman if more than 2 snowballs
+			Instantiate (explosion, transform.position + Vector3.up*3, transform.rotation);
+
+			StartCoroutine("destroySnowman");
+		}
+
+		/**
 		if (health <= 0) {
-			//print ("yes");
 			Vector3 height = new Vector3(0, 2, 0);
 			Instantiate (explosion, transform.position + height, transform.rotation);
 			Destroy (gameObject);
 			ScoreManager.score += 1;
-			//snowmanNew.transform.position = gameObject
 
-		}
+
+		}*/
+	}
+
+	public void setHealth(float newHealth)
+	{
+		health = newHealth;
+	}
+
+	IEnumerator destroySnowman()
+	{
+		yield return new WaitForSeconds(2f);
+
+		this.gameObject.SetActive (false);
 	}
 }
