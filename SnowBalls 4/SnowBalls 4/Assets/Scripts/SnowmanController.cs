@@ -38,14 +38,16 @@ public class SnowmanController : MonoBehaviour {
 
 		if (hasLegs && legsCount > 0) {
 			//Destroy (legs.gameObject);
-			legs.gameObject.active = false;
-			myJump.setHeight(.2f);
-			myJump.setJumpMagnitude(1f);
+			legs.gameObject.SetActive(false);
+			myJump.setHeight(.5f);
+			myJump.setJumpMagnitude(1.5f);
 			myJump.setJumpAngle(0f);
 			//head.position -= new Vector3 (0,1,0);
 			//body.position -= new Vector3 (0,1,0);
 
-			//hasLegs = false;
+			Instantiate (explosion, transform.position + Vector3.up*.5f, transform.rotation);
+
+			hasLegs = false;
 		}
 
 

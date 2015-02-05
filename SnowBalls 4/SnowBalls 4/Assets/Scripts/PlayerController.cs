@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour {
 	int queueLen = 0;
 
 	float verticalRotation = 0;
-	Vector3 currRot = new Vector3 (0, 0, 0);
 
 	bool canFire = true;
 
@@ -43,7 +42,7 @@ public class PlayerController : MonoBehaviour {
 		Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
 
 		//USE FOR MOVEMENT
-		currRot = Camera.main.transform.rotation.ToEulerAngles ();
+		//currRot = Camera.main.transform.rotation.ToEulerAngles ();
 
 		//Animations
 		if (!animationList.animation.IsPlaying("ThrowBall")) {

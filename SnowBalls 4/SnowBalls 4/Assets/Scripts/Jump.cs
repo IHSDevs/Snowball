@@ -17,26 +17,26 @@ public class Jump : MonoBehaviour {
 	Vector3 jumpVector = new Vector3(0,0,0);
 	Vector3 gravityVector = new Vector3(0,-9.8f,0);
 	Vector3 direction;
-	Vector3 localLeft; 
 
 	bool grounded;
 
-	LayerMask layerMask = ~12;
+	LayerMask layerMask;
 
-	RaycastHit hit;
 
 	// Use this for initialization
 	void Start () {
 		waypoint = new Vector3 (0, 0, 0);
 		direction = (waypoint - transform.position);
-		localLeft = transform.worldToLocalMatrix.MultiplyVector(Vector3.left);
+
+		layerMask = 1 << 12;
+		layerMask = ~layerMask;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		grounded = Physics.Raycast (transform.position + Vector3.up, transform.TransformDirection (Vector3.down), out hit, height, layerMask);
+		grounded = Physics.Raycast (transform.position + Vector3.up*2, transform.TransformDirection (Vector3.down), height*2, layerMask);
 
-		Debug.DrawLine (transform.position + Vector3.up, transform.position, Color.green, .1f, true);
+		Debug.DrawLine (transform.position + Vector3.up*2, transform.position, Color.green, .1f, true);
 
 		direction = (waypoint - transform.position);
 		direction.y = 0;
@@ -50,6 +50,8 @@ public class Jump : MonoBehaviour {
 			jumpVector = Quaternion.AngleAxis(-(jumpAngle), Vector3.Cross(Vector3.up, direction) ) *direction.normalized*jumpMagnitude ;
 
 			timer = 5f;
+
+
 
 		}
 

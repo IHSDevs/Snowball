@@ -12,7 +12,7 @@ public class ProjectileController : MonoBehaviour {
 	public float bodyShot = 50f;
 	public float legShot = 40f;
 	public bool collision = false;
-	private Collider hitObj;
+	//private Collider hitObj;
 
 
 	Vector3 myVelocity;
@@ -85,7 +85,6 @@ public class ProjectileController : MonoBehaviour {
 		}
 		catch (NullReferenceException)
 		{
-			print (other);
 		}
 		//Destroy (myTransform.GetComponent<Collider> ());
 		//Destroy (myTransform.GetComponent<Rigidbody> ());
@@ -112,7 +111,7 @@ public class ProjectileController : MonoBehaviour {
 						//myTransform.position = hit.collider.ClosestPointOnBounds(myTransform.position) + myTransform.rigidbody.velocity.normalized*.1f;
 						myTransform.position = hit.collider.ClosestPointOnBounds(myTransform.position + myVelocity.normalized*hit.distance);// + myVelocity.normalized*.07f;
 						//Determines where the ball will hit so that the collider doesn't collide with multiple body parts
-						hitObj = hit.collider;
+						//hitObj = hit.collider;
 
 						//prevents snowball from moving before OnTriggerEnter is called
 						myTransform.rigidbody.velocity *= 0;
