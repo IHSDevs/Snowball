@@ -102,7 +102,13 @@ public class SnowmanController : MonoBehaviour {
 
 	IEnumerator destroySnowman()
 	{
+
+		ScoreManager.score += 1;
 		yield return new WaitForSeconds(2f);
+
+		Instantiate (explosion, transform.position + Vector3.up*2, transform.rotation);
+
+
 
 		this.gameObject.SetActive (false);
 	}
