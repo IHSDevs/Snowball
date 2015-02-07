@@ -73,7 +73,7 @@ public class SnowmanController : MonoBehaviour {
 
 		//increments pathProgress once waypoint is reached, and sets myJump's new waypoint
 
-		if (reachedWaypoint () && pathProgress < myPath.Length) {
+		if (reachedWaypoint () && pathProgress < myPath.Length - 1) {
 			pathProgress ++;
 			myJump.setWaypoint(myPath[pathProgress]);
 		}
