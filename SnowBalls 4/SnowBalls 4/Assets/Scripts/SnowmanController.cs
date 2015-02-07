@@ -53,7 +53,8 @@ public class SnowmanController : MonoBehaviour {
 	int pathProgress = 0;
 
 	//controls the spurt effect of snowman decapitation
-	GameObject spurtClone;
+	GameObject spurtCloneBody;
+	GameObject spurtCloneLegs;
 
 	//used to remove limbs
 	bool alive = true;
@@ -100,6 +101,24 @@ public class SnowmanController : MonoBehaviour {
 			alive = false;
 			StartCoroutine("destroySnowman");
 		}
+
+		if (!alive) {
+			if (!spurtCloneBody) {
+				if (Vector3.Distance (head.position, body.position) > 1f) {
+					spurtCloneBody = Instantiate (spurt, transform.position + Vector3.up * 2, upRotation) as GameObject;
+					spurtCloneBody.transform.parent = body;
+				}
+			}
+			if (!spurtCloneLegs) {
+				if (Vector3.Distance (body.position, legs.position) > 1.3f)
+				{
+					spurtCloneLegs = Instantiate (spurt, transform.position + Vector3.up * 1, upRotation) as GameObject;
+					spurtCloneLegs.transform.parent = legs;
+				}
+			}
+		}
+
+		
 	}
 	
 	//sets the health of snowman
@@ -114,15 +133,24 @@ public class SnowmanController : MonoBehaviour {
 		Destroy (transform.GetComponent<Attack> ());
 		ScoreManager.score += 1;
 		myJump.setJumpMagnitude(0f);
+
+		head.gameObject.AddComponent<Rigidbody> ();
+		body.gameObject.AddComponent<Rigidbody> ();
+		legs.gameObject.AddComponent<Rigidbody> ();
+
+		body.rigidbody.freezeRotation = true;
+
 		yield return new WaitForSeconds(2f);
 		
-		Destroy (spurtClone);
-		Destroy (head.GetComponent<SphereCollider> ());
-		Destroy (body.GetComponent<SphereCollider> ());
-		Destroy (legs.GetComponent<SphereCollider> ());
+		Destroy (spurtCloneBody);
+
 		transform.GetChild (0).gameObject.SetActive (false);
 
 		Instantiate (explosion, transform.position + Vector3.up*2, transform.rotation);
+
+		Destroy (head.gameObject);
+		Destroy (body.gameObject);
+		Destroy (legs.gameObject);
 
 		this.gameObject.SetActive (false);
 	}
@@ -145,8 +173,8 @@ public class SnowmanController : MonoBehaviour {
 
 		Instantiate (explosion, transform.position + Vector3.up*2, transform.rotation);
 
-		spurtClone = Instantiate (spurt, transform.position + Vector3.up*2, upRotation) as GameObject;
-		spurtClone.transform.parent = transform;
+		spurtCloneBody = Instantiate (spurt, transform.position + Vector3.up*2, upRotation) as GameObject;
+		spurtCloneBody.transform.parent = body;
 
 		StartCoroutine("destroySnowman");
 	}

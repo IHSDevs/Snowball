@@ -20,17 +20,12 @@ public class Spawner : MonoBehaviour {
 
 		//stores the length of waypointAggregator's path
 		pathLen = waypointAggregator.getPathLength ();
-		print (pathLen);
 
 		//sets myPath's length to the length of waypointAggregator's path
 		myPath = new Vector3[pathLen];
 
 		//sets myPath to waypointAggregator's path
 		myPath = waypointAggregator.getPath();
-
-		foreach (Vector3 spot in myPath) {
-			print (spot);
-		}
 	}
 
 	//spawns the defaultEnemy
@@ -44,8 +39,6 @@ public class Spawner : MonoBehaviour {
 
 		//gives cloned enemy a path
 		mobClone.GetComponent<SnowmanController>().setPath (myPath, pathLen);
-
-		print ("path set");
 
 	}
 
