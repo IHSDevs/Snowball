@@ -5,7 +5,7 @@ public class ProjectObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Vector3 myVelocity = new Vector3 (Random.Range (-2, 2), Random.Range (-2, 2), Random.Range (-2, 2));
+		Vector3 myVelocity = new Vector3 (Random.Range (-5, 5), Random.Range (6, 12), Random.Range (-5, 5));
 		transform.rigidbody.velocity = myVelocity;
 
 		StartCoroutine("deathDelay");
@@ -15,7 +15,7 @@ public class ProjectObject : MonoBehaviour {
 	{
 
 		print ("jfd");
-		yield return new WaitForSeconds (1f);
+		yield return new WaitForSeconds (3f);
 
 		print ("?");
 

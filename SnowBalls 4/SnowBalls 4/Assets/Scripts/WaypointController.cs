@@ -4,55 +4,33 @@ using System.Collections;
 
 //This class still needs work. I didn't write very efficient code here.
 public class WaypointController: MonoBehaviour {
-	GameObject[] waypoints;
+	//GameObject[] waypoints;
+
+	Vector3[] path;
 	ArrayList travellers;
 	
-	
-	// Use this for initialization
-	void Start () {
-		waypoints = new GameObject[transform.childCount];
-		travellers = new ArrayList ();
+	//puts all child WayPoint positions into  array  path
+	//!note - not in start method because spawner's start will bug out
+	public void aggregateWaypoints()
+	{
+		path = new Vector3[transform.childCount];
+		
 		int i = 0;
 		foreach (Transform child in transform) {
-			waypoints[i] = child.gameObject;
+			path[i] = child.position;
 			i++;
 		}
-		
-		//print (1);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-		for (int i = 0; i < waypoints.Length; i ++) {
-			for (int j = 0; j < travellers.Count; j ++) {
-				if (!(GameObject)travellers[j])
-				{
-					travellers.RemoveAt(j);
-					j--;
-				}
-				else
-				{
-					GameObject obj = ((GameObject)travellers[j]);
-					Vector3 position = obj.GetComponent<Jump>().getPosition();
-					if (Vector3.Distance (waypoints [i].transform.position, position) < waypoints [i].GetComponent<Waypoint> ().radius)
-						incrementWaypoint(i, obj);
-				}
-			}
-		}
-	}
-	
-	public void addTraveller(GameObject traveller)
+
+	//returns Vector3[] path
+	public Vector3[] getPath()
 	{
-		traveller.GetComponent<Jump>().setWaypoint(waypoints[0].transform.position);
-		travellers.Add (traveller);
+		return path;
 	}
-	
-	void incrementWaypoint(int waypointNum, GameObject obj)
+
+	//returns path's length
+	public int getPathLength()
 	{
-		if (waypointNum == waypoints.Length - 1)
-			waypointNum -= 1;
-		obj.GetComponent<Jump> ().setWaypoint (waypoints [waypointNum + 1].transform.position);
+		return path.Length;
 	}
-	
 }

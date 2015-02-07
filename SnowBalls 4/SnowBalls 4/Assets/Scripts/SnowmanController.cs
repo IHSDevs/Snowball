@@ -3,113 +3,171 @@ using System.Collections;
 
 
 public class SnowmanController : MonoBehaviour {
-	
+
+	Quaternion upRotation;
+
+	public float howClose;
+
+	public GameObject spurt;
 	public GameObject explosion;
 	public int explosionLimit = 1;
 	public float health = 100f;
-
+	
 	/**
 	public float headShot = 100f;
 	public float bodyShot = 50f;
 	public float legShot = 25f;*/
-
+	
 	public Jump myJump;
 
+	//my ultimate target location
+	public Vector3 myGoal;
+	
+	//gibs used upon death
 	public Transform GibNose;
 	public Transform GibEye;
 	public Transform GibButton;
 
+	//hit count for individual segments
 	private int headCount = 0;
 	private int bodyCount = 0;
 	private int legsCount = 0;
 
+	//damage multiplier for body segments
 	public float headMultiplier;
 	public float bodyMultiplier;
 	public float legsMultiplier;
 
+	//transforms for body segments
 	public Transform head;
 	public Transform body;
 	public Transform legs;
-	
+
+	//hitboxes of body segments
 	public ProjectileCounter headCounter;
 	public ProjectileCounter bodyCounter;
 	public ProjectileCounter legsCounter;
 
+	//the path to be followed
+	Vector3[] myPath;
+	int pathProgress = 0;
 
-	bool hasHead = true;
+	//controls the spurt effect of snowman decapitation
+	GameObject spurtClone;
+
+	//used to remove limbs
+	bool alive = true;
 	bool hasLegs = true;
+
+
+	void Start () {
+		//stores the upwards facing rotation
+		upRotation = Quaternion.LookRotation (Vector3.up, Vector3.up);
+	}
 	
 	void Update () {
-
-		if (hasLegs && legsCount > 0) {
-
-			legs.gameObject.SetActive(false);
-			myJump.setHeight(.5f);
-			myJump.setJumpMagnitude(3f);
-			myJump.setJumpAngle(70f);
-
-			Instantiate (explosion, transform.position + Vector3.up*.5f, transform.rotation);
-
-			hasLegs = false;
-
-			Instantiate(GibNose, transform.position, transform.rotation);
-		}
-
-
+		//updates hit count of each segment
 		headCount = headCounter.getHits ();
 		bodyCount = bodyCounter.getHits ();
 		legsCount = legsCounter.getHits ();
 
+		//increments pathProgress once waypoint is reached, and sets myJump's new waypoint
+
+		if (reachedWaypoint () && pathProgress < myPath.Length) {
+			pathProgress ++;
+			myJump.setWaypoint(myPath[pathProgress]);
+		}
+
+		//destroys legs if legs are still alive and damaged
+		if (hasLegs && legsCount > 0) {
+			hasLegs = false;
+			destroyLegs();
+		}
+
+		//calculates health, might want to change later
 		if ((headMultiplier * headCount + bodyMultiplier * bodyCount + legsMultiplier * legsCount) >= health) {
 			health = 0;
 		}
 
-		if (hasHead && headCount > 0) {
-
-			hasHead = false;
-
-			head.gameObject.SetActive(false);
-
-			Instantiate(GibNose, transform.position, transform.rotation);
-			Instantiate(GibEye, transform.position, transform.rotation);
-			Instantiate(GibButton, transform.position, transform.rotation);
-			Instantiate(GibButton, transform.position, transform.rotation);
-			Instantiate(GibButton, transform.position, transform.rotation);
-
-			//Destroy(myJump);
-			myJump.setJumpMagnitude(0f);
-
-			Instantiate (explosion, transform.position + Vector3.up*3, transform.rotation);
-
-			StartCoroutine("destroySnowman");
+		//destroys head if it has a head and is alive
+		if (alive && headCount > 0) {
+			alive = false;
+			destroyHead();
 		}
 
-		/**
-		if (health <= 0) {
-			Vector3 height = new Vector3(0, 2, 0);
-			Instantiate (explosion, transform.position + height, transform.rotation);
-			Destroy (gameObject);
-			ScoreManager.score += 1;
-
-
-		}*/
+		//destroys snowman once its health reaches zero
+		if (health <= 0 && alive) {
+			alive = false;
+			StartCoroutine("destroySnowman");
+		}
 	}
-
+	
+	//sets the health of snowman
 	public void setHealth(float newHealth)
 	{
 		health = newHealth;
 	}
 
+	//destroys the entire snowman with cute effects
 	IEnumerator destroySnowman()
 	{
-
+		Destroy (transform.GetComponent<Attack> ());
 		ScoreManager.score += 1;
+		myJump.setJumpMagnitude(0f);
 		yield return new WaitForSeconds(2f);
+		
+		Destroy (spurtClone);
+		Destroy (head.GetComponent<SphereCollider> ());
+		Destroy (body.GetComponent<SphereCollider> ());
+		Destroy (legs.GetComponent<SphereCollider> ());
+		transform.GetChild (0).gameObject.SetActive (false);
 
 		Instantiate (explosion, transform.position + Vector3.up*2, transform.rotation);
 
-
-
 		this.gameObject.SetActive (false);
+	}
+
+	//sets the path of the snowman
+	public void setPath (Vector3[] path, int len){
+		myPath = new Vector3[len];
+		myPath = path;
+	}
+
+	//destroys the snowman's head using cute effects
+	void destroyHead() {
+		head.gameObject.SetActive(false);
+		
+		Instantiate(GibNose, transform.position + Vector3.up*2, transform.rotation);
+		Instantiate(GibEye, transform.position + Vector3.up*2, transform.rotation);
+		Instantiate(GibButton, transform.position + Vector3.up*2, transform.rotation);
+		Instantiate(GibButton, transform.position + Vector3.up*2, transform.rotation);
+		Instantiate(GibButton, transform.position + Vector3.up*2, transform.rotation);
+
+		Instantiate (explosion, transform.position + Vector3.up*2, transform.rotation);
+
+		spurtClone = Instantiate (spurt, transform.position + Vector3.up*2, upRotation) as GameObject;
+		spurtClone.transform.parent = transform;
+
+		StartCoroutine("destroySnowman");
+	}
+
+	//destroys the snowman's legs using cute effects
+	void destroyLegs() {
+		legs.gameObject.SetActive(false);
+		myJump.setHeight(.5f);
+		myJump.setJumpMagnitude(3f);
+		myJump.setJumpAngle(70f);
+		
+		Instantiate (explosion, transform.position + Vector3.up*.5f, transform.rotation);
+
+		Instantiate(GibNose, transform.position, transform.rotation);
+	}
+
+	//returns whether or not waypoint has been reached
+	bool reachedWaypoint() {
+		if (Vector3.Distance (transform.position, myPath[pathProgress]) < 5) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
 	public float snowballVelocity = 40;
 	public int maxBalls = 20;
 
+
 	Animation animationList;
 
 	Transform myTransform;
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds(.2f);
 
 		Transform t = Instantiate(snowball, myTransform.position + mainCamera.transform.forward + mainCamera.transform.up + mainCamera.transform.right*.5f, Camera.main.transform.rotation) as Transform;
+
 		GameObject objectClone = t.gameObject;
 		objectClone.rigidbody.velocity = mainCamera.transform.forward*snowballVelocity;
 

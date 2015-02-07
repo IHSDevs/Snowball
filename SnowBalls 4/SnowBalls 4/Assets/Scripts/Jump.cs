@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class Jump : MonoBehaviour {
-	
-	public float howClose = 1f;
+
 	public float speed = 10f;
 
 	public float jumpMagnitude = 5f;
@@ -34,6 +33,13 @@ public class Jump : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		Vector3 transitionDirection = Vector3.RotateTowards(transform.forward, direction, Mathf.PI*Time.deltaTime, 0f);
+
+		transform.rotation = Quaternion.LookRotation(transitionDirection);
+
+
+
 		grounded = Physics.Raycast (transform.position + Vector3.up*2, transform.TransformDirection (Vector3.down), height*2, layerMask);
 
 		Debug.DrawLine (transform.position + Vector3.up*2, transform.position, Color.green, .1f, true);
@@ -42,10 +48,14 @@ public class Jump : MonoBehaviour {
 		direction.y = 0;
 
 		timer -= Time.deltaTime;
-		if (Vector3.Distance (transform.position, waypoint) > howClose && grounded) 
+
+		if (grounded) 
 		{
 			//float step = speed * Time.deltaTime;
 			//transform.position = Vector3.MoveTowards(transform.position, waypoint, step);
+
+
+			transform.rigidbody.velocity = Vector3.zero;
 
 			jumpVector = Quaternion.AngleAxis(-(jumpAngle), Vector3.Cross(Vector3.up, direction) ) *direction.normalized*jumpMagnitude ;
 
