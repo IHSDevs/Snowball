@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ScoreManager : MonoBehaviour {
 	public static int score;
-	
+	public static int wave = 1;
 	Text text;
 
 	// Use this for initialization
@@ -15,6 +15,7 @@ public class ScoreManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		text.text = "Score: " + score;
+		wave = score / 10 + 1;
+		text.text = "Wave: " + wave;
 	}
 }

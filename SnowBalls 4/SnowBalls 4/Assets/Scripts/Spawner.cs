@@ -4,8 +4,8 @@ using System.Collections;
 public class Spawner : MonoBehaviour {
 	
 	public Transform defaultEnemy;
-	public float timeDelay = 10f;
-	
+	public float timeDelay;
+	public int wave;
 	public WaypointController waypointAggregator;
 
 	Vector3[] myPath;
