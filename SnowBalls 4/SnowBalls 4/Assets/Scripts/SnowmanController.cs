@@ -59,6 +59,7 @@ public class SnowmanController : MonoBehaviour {
 	//used to remove limbs
 	bool alive = true;
 	bool hasLegs = true;
+	bool hasHead = true;
 
 
 	void Start () {
@@ -91,7 +92,8 @@ public class SnowmanController : MonoBehaviour {
 		}
 
 		//destroys head if it has a head and is alive
-		if (alive && headCount > 0) {
+		if (hasHead && headCount > 0) {
+			hasHead = false;
 			alive = false;
 			destroyHead();
 		}
@@ -104,15 +106,15 @@ public class SnowmanController : MonoBehaviour {
 
 		if (!alive) {
 			if (!spurtCloneBody) {
-				if (Vector3.Distance (head.position, body.position) > 1f) {
-					spurtCloneBody = Instantiate (spurt, transform.position + Vector3.up * 2, upRotation) as GameObject;
+				if (Vector3.Distance (head.position, body.position) > .9f) {
+					spurtCloneBody = Instantiate (spurt, transform.position + Vector3.up * 1.6f, upRotation) as GameObject;
 					spurtCloneBody.transform.parent = body;
 				}
 			}
 			if (!spurtCloneLegs) {
-				if (Vector3.Distance (body.position, legs.position) > 1.3f)
+				if (Vector3.Distance (body.position, legs.position) > 1.2f)
 				{
-					spurtCloneLegs = Instantiate (spurt, transform.position + Vector3.up * 1, upRotation) as GameObject;
+					spurtCloneLegs = Instantiate (spurt, transform.position + Vector3.up * .8f, upRotation) as GameObject;
 					spurtCloneLegs.transform.parent = legs;
 				}
 			}
@@ -139,8 +141,21 @@ public class SnowmanController : MonoBehaviour {
 		legs.gameObject.AddComponent<Rigidbody> ();
 
 		body.rigidbody.freezeRotation = true;
+		legs.rigidbody.freezeRotation = true;
 
-		yield return new WaitForSeconds(2f);
+		head.rigidbody.mass = .0000001f;
+		body.rigidbody.mass = .0000001f;
+		legs.rigidbody.mass = .0000001f;
+
+		yield return new WaitForSeconds(1f);
+
+		if (spurtCloneBody)
+			spurtCloneBody.GetComponent<ParticleSystem>().Stop();
+		if (spurtCloneLegs)
+			spurtCloneLegs.GetComponent<ParticleSystem>().Stop();
+		  
+
+		yield return new WaitForSeconds(4f);
 		
 		Destroy (spurtCloneBody);
 

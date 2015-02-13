@@ -5,8 +5,12 @@ public class ProjectObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Vector3 myVelocity = new Vector3 (Random.Range (-2, 2), Random.Range (6, 10), Random.Range (-2, 2));
+		Vector3 myVelocity = new Vector3 (Random.Range (-3, 3), Random.Range (4, 8), Random.Range (-3, 3));
+		Vector3 myAngularVelocity = new Vector3 (Random.Range (-3, 3), Random.Range (3, 3), Random.Range (-3, 3));
 		transform.rigidbody.velocity = myVelocity;
+		transform.rigidbody.angularVelocity = myAngularVelocity;
+
+
 
 		StartCoroutine("deathDelay");
 	}
