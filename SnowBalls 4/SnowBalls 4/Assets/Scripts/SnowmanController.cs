@@ -166,8 +166,9 @@ public class SnowmanController : MonoBehaviour {
 		Destroy (head.gameObject);
 		Destroy (body.gameObject);
 		Destroy (legs.gameObject);
+		Destroy (this.gameObject);
 
-		this.gameObject.SetActive (false);
+		//this.gameObject.SetActive (false);
 	}
 
 	//sets the path of the snowman

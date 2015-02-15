@@ -2,26 +2,46 @@
 using System.Collections;
 
 public class Node {
-	int distanceFromTarget;
+	int distance;
+
+	int direction;
+	//instructions for directions
+	//3  6  9
+	//2  5  8
+	//1  4  7
+	
 	bool traversible;
+
+	public bool testColor;
+
+	bool diagonal;
 	Node parent;
+	int x, y;
 	Vector3 worldPos;
 
 	//Constructor
-	public Node(bool _traversible, Vector3 _worldPos)
+	public Node(bool _traversible, Vector3 _worldPos, int _x, int _y)
 	{
+		testColor = false;
 		traversible = _traversible;
 		worldPos = _worldPos;
+
+		x = _x;
+		y = _y;
+
+		distance = 999;
+
+		diagonal = false;
 	}
 
 	//Accessor for DistanceFromTarget
-	public int DistanceFromTarget
+	public int Distance
 	{
 		get {
-			return distanceFromTarget;
+			return distance;
 		}
 		set {
-			distanceFromTarget = value;
+			distance = value;
 		}
 	}
 
@@ -52,6 +72,40 @@ public class Node {
 		}
 		set {
 			traversible = value;
+		}
+	}
+
+	//Accessor for diagonal
+	public bool Diagonal {
+		get {
+			return diagonal;
+		}
+		set {
+			diagonal = value;
+		}
+	}
+
+	//Accessor for x
+	public int X{
+		get {
+			return x;
+		}
+	}
+
+	//Accessor for y
+	public int Y{
+		get{
+			return y;
+		}
+	}
+
+	//Accessor for direction
+	public int Direction{
+		get{
+			return direction;
+		}
+		set {
+			direction = value;
 		}
 	}
 }

@@ -11,38 +11,49 @@ public class Grid : MonoBehaviour {
 	Vector3 pos;
 
 	float nodeRadius;
+	float nodeDiameter;
 
-	//instantiates an array of Nodes
+	int obstacles;
+
+	//instantiates an array of Nodes and returns number of obstacle Nodes
 	public void CreateGrid ()
 	{
 		pos = transform.position;
 		grid = new Node[length, length];
 		nodeRadius = size / (length*2);
+		nodeDiameter = size / length;
 		float currentX, currentZ;
 		Vector3 currNodePos;
 		bool traversible;
 
+		obstacles = 0;
+
 		for (int i = 0; i < length; i ++) {
 			for (int j = 0; j < length; j ++) {
-				currentX = (pos.x - size/2) + 2*nodeRadius*i + nodeRadius;
-				currentZ = (pos.y - size/2) + 2*nodeRadius*j + nodeRadius;
+
+				currentX = (pos.x - size/2) + nodeDiameter*i + nodeRadius;
+				currentZ = (pos.y - size/2) + nodeDiameter*j + nodeRadius;
+
 				currNodePos = new Vector3(currentX, 0, currentZ);
 
 				traversible = !Physics.CheckSphere(currNodePos, nodeRadius, obstacleLayer);
 
-				grid[i,j] = new Node(traversible, currNodePos);
+				obstacles = (traversible) ? obstacles : obstacles + 1;//increments obstacles if not traversible
+
+				grid[i,j] = new Node(traversible, currNodePos, i, j);
 			}
 		}
 	}
 
+	//Draws nodes as rectangles
 	void OnDrawGizmos() 
 	{
 		if (grid != null) 
 		{
 			foreach (Node n in grid) 
 			{
-				Gizmos.color = (n.Traversible)?Color.white:Color.red;
-				Gizmos.DrawCube(n.WorldPos, Vector3.one * (nodeRadius*2 - .2f) - Vector3.up * nodeRadius * .9f);
+				Gizmos.color = !(n.Traversible)? Color.red: (n.testColor)? Color.blue : Color.white;
+				Gizmos.DrawCube(n.WorldPos, Vector3.one * (nodeDiameter - .1f) - Vector3.up * nodeRadius * .9f);
 			}
 		}
 	}
@@ -50,12 +61,45 @@ public class Grid : MonoBehaviour {
 	//Takes a pos and returns the correpsonding node, if possible
 	public Node NodeFromPos(Vector3 position)
 	{
-		Vector3 posDiff = position - pos;//difference in position
-		float greatestDiff = (position.x - pos.x) > (position.y - pos.y) ? 
-			(position.x-pos.x) 
-			: (position.y-pos.y);//greatest difference between floats of positiona nd pos
-		return (Mathf.Abs (greatestDiff) < size / 2) ? 
-			grid [(int)(posDiff.x / size), (int)(posDiff.y / size)] 
-			: null;//returns Node, else null
+		Vector3 posDiff = position + pos + Vector3.one * size/2;//difference in position
+		posDiff /= nodeDiameter;
+
+		int i = ClampToInt (posDiff.x, 0, length - 1);
+		int j = ClampToInt (posDiff.z, 0, length - 1);
+
+		return grid[i,j];
+	}
+
+	//Checks if OOB
+	public bool IsOOB(int _x, int _y)
+	{
+		return !(_x > 0 && _x < length && _y > 0 && _y < length);
+	}
+
+	//Clamps an int to specified value
+	int ClampToInt(int i, int min, int max)
+	{
+		return (i < min) ? min : (i > max) ? max : i;
+	}
+
+	//Clamps float to specified value
+	int ClampToInt(float f, int min, int max)
+	{
+		int i = (int)f;
+		return (i < min) ? min : (i > max) ? max : i;
+	}
+
+	//Accessor for Obstacles
+	public int Obstacles
+	{
+		get {
+			return obstacles;
+		}
+	}
+
+	//Accessor for grid
+	public Node NodeFromCoord(int x, int y)
+	{
+		return grid[x,y];
 	}
 }
