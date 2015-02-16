@@ -46,26 +46,26 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Attack.cs" />
-     <Compile Include="Assets\Scripts\GameOverManager.cs" />
-     <Compile Include="Assets\Scripts\Health.cs" />
-     <Compile Include="Assets\Scripts\HealthPlayer.cs" />
-     <Compile Include="Assets\Scripts\Jump.cs" />
-     <Compile Include="Assets\Scripts\MenuScript.cs" />
-     <Compile Include="Assets\Scripts\Movement.cs" />
+     <Compile Include="Assets\Scripts\Enemy\Attack.cs" />
+     <Compile Include="Assets\Scripts\Enemy\Jump.cs" />
+     <Compile Include="Assets\Scripts\Enemy\Movement.cs" />
+     <Compile Include="Assets\Scripts\Enemy\SnowmanController.cs" />
+     <Compile Include="Assets\Scripts\Enemy\Spawner.cs" />
+     <Compile Include="Assets\Scripts\GUI\GameOverManager.cs" />
+     <Compile Include="Assets\Scripts\GUI\Health.cs" />
+     <Compile Include="Assets\Scripts\GUI\MenuScript.cs" />
+     <Compile Include="Assets\Scripts\GUI\ScoreManager.cs" />
+     <Compile Include="Assets\Scripts\GUI\SplashScreenScript.cs" />
      <Compile Include="Assets\Scripts\Pathing\Grid.cs" />
      <Compile Include="Assets\Scripts\Pathing\JulianPathing.cs" />
      <Compile Include="Assets\Scripts\Pathing\Node.cs" />
-     <Compile Include="Assets\Scripts\PlayerController.cs" />
-     <Compile Include="Assets\Scripts\ProjectObject.cs" />
-     <Compile Include="Assets\Scripts\ProjectileController.cs" />
-     <Compile Include="Assets\Scripts\ProjectileCounter.cs" />
-     <Compile Include="Assets\Scripts\ScoreManager.cs" />
-     <Compile Include="Assets\Scripts\SnowmanController.cs" />
-     <Compile Include="Assets\Scripts\Spawner.cs" />
-     <Compile Include="Assets\Scripts\SplashScreenScript.cs" />
-     <Compile Include="Assets\Scripts\Waypoint.cs" />
-     <Compile Include="Assets\Scripts\WaypointController.cs" />
+     <Compile Include="Assets\Scripts\Pathing\Waypoint.cs" />
+     <Compile Include="Assets\Scripts\Pathing\WaypointController.cs" />
+     <Compile Include="Assets\Scripts\Player\HealthPlayer.cs" />
+     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\Projectile\ProjectObject.cs" />
+     <Compile Include="Assets\Scripts\Projectile\ProjectileController.cs" />
+     <Compile Include="Assets\Scripts\Projectile\ProjectileCounter.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

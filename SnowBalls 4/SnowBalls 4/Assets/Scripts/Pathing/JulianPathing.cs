@@ -92,26 +92,26 @@ public class JulianPathing : MonoBehaviour {
 
 						temp = grid.NodeFromCoord(x+xPos,y+yPos);//sets temp Node to current index
 
-						if (n.Distance + 1 < temp.Distance && temp.Traversible) { // || temp.Diagonal && n.Distance == temp.Distance) {//n path faster than temp path, or n path equal to temp path and temp set diagonally
+						if (n.Distance + 1 < temp.Distance && temp.Traversible || temp.Diagonal && n.Distance + 1 == temp.Distance) {//n path faster than temp path, or n path equal to temp path and temp set diagonally
 
 							temp.Distance = n.Distance + 1;//set temp path equal to n path
 							temp.Direction = dir;
 
-							/**if (temp.Direction == n.Direction) {//if directions are same
+							if (temp.Direction == n.Direction) {//if directions are same
 								temp.Parent = n.Parent;//temp's parent set to n's parent
 							}
 							else {
 								temp.Parent = n;//temp's parent set to n
-							}*/
+							}
 
 							temp.Parent = n;
 
-							/**if (dir % 2 == 0) {//if not diagonal, diagonal set to false. 5 never comes up because 5 is self
+							if (dir % 2 == 0) {//if not diagonal, diagonal set to false. 5 never comes up because 5 is self
 								temp.Diagonal = false;
 							}
 							else {
 								temp.Diagonal = true;
-							}*/
+							}
 							count ++;
 							processQueue.Enqueue (temp);//Enqueues temp.
 						}
