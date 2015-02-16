@@ -59,6 +59,7 @@
      <Compile Include="Assets\Scripts\Pathing\Grid.cs" />
      <Compile Include="Assets\Scripts\Pathing\JulianPathing.cs" />
      <Compile Include="Assets\Scripts\Pathing\Node.cs" />
+     <Compile Include="Assets\Scripts\Pathing\NodeBoy.cs" />
      <Compile Include="Assets\Scripts\Pathing\Waypoint.cs" />
      <Compile Include="Assets\Scripts\Pathing\WaypointController.cs" />
      <Compile Include="Assets\Scripts\Player\HealthPlayer.cs" />

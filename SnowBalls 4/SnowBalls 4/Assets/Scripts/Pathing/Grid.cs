@@ -53,7 +53,7 @@ public class Grid : MonoBehaviour {
 			foreach (Node n in grid) 
 			{
 				Gizmos.color = !(n.Traversible)? Color.red: (n.testColor)? Color.blue : Color.white;
-				Gizmos.DrawCube(n.WorldPos, Vector3.one * (nodeDiameter) - Vector3.up * nodeRadius * .9f);
+				Gizmos.DrawCube(n.Position, Vector3.one * (nodeDiameter) - Vector3.up * nodeRadius * .9f);
 				n.testColor = false;
 			}
 		}

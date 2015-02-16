@@ -4,6 +4,8 @@ using System.Collections;
 public class Node {
 	int distance;
 
+	int degreesSeperation;//degrees of seperation from universal parent node
+
 	int direction;
 	//instructions for directions
 	//3  6  9
@@ -14,24 +16,21 @@ public class Node {
 
 	public bool testColor;
 
-	bool diagonal;
 	Node parent;
 	int x, y;
-	Vector3 worldPos;
+	Vector3 position;
 
 	//Constructor
-	public Node(bool _traversible, Vector3 _worldPos, int _x, int _y)
+	public Node(bool _traversible, Vector3 _position, int _x, int _y)
 	{
 		testColor = false;
 		traversible = _traversible;
-		worldPos = _worldPos;
+		position = _position;
 
 		x = _x;
 		y = _y;
 
-		distance = 999;
-
-		diagonal = false;
+		distance = -1;
 	}
 
 	//Accessor for DistanceFromTarget
@@ -45,13 +44,13 @@ public class Node {
 		}
 	}
 
-	//Accessor for worldPos
-	public Vector3 WorldPos {
+	//Accessor for position
+	public Vector3 Position {
 		get {
-			return worldPos;
+			return position;
 		}
 		set {
-			worldPos = value;
+			position = value;
 		}
 	}
 
@@ -72,16 +71,6 @@ public class Node {
 		}
 		set {
 			traversible = value;
-		}
-	}
-
-	//Accessor for diagonal
-	public bool Diagonal {
-		get {
-			return diagonal;
-		}
-		set {
-			diagonal = value;
 		}
 	}
 
@@ -106,6 +95,17 @@ public class Node {
 		}
 		set {
 			direction = value;
+		}
+	}
+
+	//Accessor for degreesSeperation
+	public int DegreesSeperation
+	{
+		get{
+			return degreesSeperation;
+		}
+		set {
+			degreesSeperation = value;
 		}
 	}
 }

@@ -1,79 +1,79 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Diagnostics;//for timer
+//using System.Diagnostics;//for timer
 
-public class JulianPathing : MonoBehaviour {
+public class JulianPathing : MonoBehaviour 
+{
 
+	public bool spawnNodeBoys, showPath;
 	public Grid grid;
-	public Transform start;
-	public Transform finish;
-	public Transform test;
-
-	int count = 0;
-
-	bool oneShot = true;
-	bool oneShotTwo = true;
+	public Transform start, finish, test;
 
 	Queue processQueue;
 
 	void Start ()
 	{
-		Stopwatch timer1 = new Stopwatch();
-		if (oneShotTwo) {
-			timer1.Start();
-		}
-
 		PopulateGrid ();
-		
-		if (oneShotTwo) {
-			timer1.Stop ();
-			print(timer1.ElapsedMilliseconds + "initial");
-		}
-
-		//print (grid.NodeFromPos(start.position).X + " " + grid.NodeFromPos(start.position).Y);
-		//grid.CreateGrid ();
-		//print (grid.NodeFromPos(finish.position).Distance);
+		InvokeRepeating("SpawnNodeBoy", 0, .05f);
 	}
 
-	void Update ()
+	void Update () 
 	{
-		Stopwatch timer = new Stopwatch();
-		if (oneShot) {
-			timer.Start ();
-		}
-
-		Node testNode = grid.NodeFromPos(finish.position);
-		while (testNode.Parent != null) {
-			testNode.testColor = true;
-			testNode = testNode.Parent;
-		}
-
-		timer.Stop ();
-		if (oneShot) {
-			print (timer.ElapsedMilliseconds);
-			oneShot = false;
-		}
-	
-		//grid.NodeFromPos (test.position).Traversible = false;
+		GetPathFromPos(finish.position);
 	}
 
+	void SpawnNodeBoy() 
+	{
+		if (spawnNodeBoys && grid.NodeFromPos(finish.position).Traversible) 
+		{
+			NodeBoy myBoi = transform.gameObject.AddComponent<NodeBoy> ();
+			myBoi.Position = finish.position;
+			myBoi.Path = GetPathFromPos(finish.position);
+		}
+	}
+
+	//Given a Vector3 position, returns an array of Vector3 containing waypoint positions 
+	public Vector3[] GetPathFromPos(Vector3 pos)
+	{
+		//Stopwatch myTimer = new Stopwatch();
+		//myTimer.Start();
+		Node temp = grid.NodeFromPos(pos);
+		Vector3[] path = new Vector3[temp.DegreesSeperation];
+
+		//adds all waypoint Nodes to path
+		for (int i = 0; temp.Parent != null; i ++)
+		{
+			temp.testColor = (showPath) ? true : false;
+			temp = temp.Parent;
+			path[i] = temp.Position;
+		}
+
+		//myTimer.Stop();
+		//print(myTimer.ElapsedMilliseconds);
+		return path;
+	}
+
+	//Populates Nodes of grid with parents
 	void PopulateGrid()
 	{
 		processQueue = new Queue ();
+
 		grid.CreateGrid ();
-		//int goal = grid.Obstacles;
+
 		Node startNode = grid.NodeFromPos (start.position);
+
 		startNode.Distance = 0;
+		startNode.DegreesSeperation = 0;
 
 		processQueue.Enqueue (startNode);
+
 		while (processQueue.Count > 0)
 		{
 			EnqueueAdjacentNodes ((Node)processQueue.Dequeue());
-
 		} 
-		print (count);
 	}
 
+	//Enqueues nodes adjacent to n and updates appropriate values
 	void EnqueueAdjacentNodes (Node n)
 	{
 		int xPos = n.X;
@@ -92,27 +92,30 @@ public class JulianPathing : MonoBehaviour {
 
 						temp = grid.NodeFromCoord(x+xPos,y+yPos);//sets temp Node to current index
 
-						if (n.Distance + 1 < temp.Distance && temp.Traversible || temp.Diagonal && n.Distance + 1 == temp.Distance) {//n path faster than temp path, or n path equal to temp path and temp set diagonally
+						if ((n.Distance + 10 < temp.Distance || temp.Distance < 0) && temp.Traversible) {//n path faster than temp path, or temp path is virgin
 
-							temp.Distance = n.Distance + 1;//set temp path equal to n path
+							//sets direction of updated Node
 							temp.Direction = dir;
 
+							//Updates degrees of seperation
+							temp.DegreesSeperation = n.DegreesSeperation;
+
+							//limits number of waypoints to minimum required
 							if (temp.Direction == n.Direction) {//if directions are same
 								temp.Parent = n.Parent;//temp's parent set to n's parent
 							}
 							else {
 								temp.Parent = n;//temp's parent set to n
+								temp.DegreesSeperation += 1;
 							}
 
-							temp.Parent = n;
-
-							if (dir % 2 == 0) {//if not diagonal, diagonal set to false. 5 never comes up because 5 is self
-								temp.Diagonal = false;
+							if (dir % 2 == 0) {//diagonal moves cost more
+								temp.Distance = n.Distance + 10;//set temp path equal to n path
 							}
 							else {
-								temp.Diagonal = true;
+								temp.Distance = n.Distance + 14;//set temp path equal to n path
 							}
-							count ++;
+
 							processQueue.Enqueue (temp);//Enqueues temp.
 						}
 					}
