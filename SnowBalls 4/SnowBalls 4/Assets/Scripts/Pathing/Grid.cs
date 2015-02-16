@@ -53,7 +53,8 @@ public class Grid : MonoBehaviour {
 			foreach (Node n in grid) 
 			{
 				Gizmos.color = !(n.Traversible)? Color.red: (n.testColor)? Color.blue : Color.white;
-				Gizmos.DrawCube(n.WorldPos, Vector3.one * (nodeDiameter - .1f) - Vector3.up * nodeRadius * .9f);
+				Gizmos.DrawCube(n.WorldPos, Vector3.one * (nodeDiameter) - Vector3.up * nodeRadius * .9f);
+				n.testColor = false;
 			}
 		}
 	}
@@ -73,7 +74,7 @@ public class Grid : MonoBehaviour {
 	//Checks if OOB
 	public bool IsOOB(int _x, int _y)
 	{
-		return !(_x > 0 && _x < length && _y > 0 && _y < length);
+		return !(_x >= 0 && _x < length && _y >= 0 && _y < length);
 	}
 
 	//Clamps an int to specified value

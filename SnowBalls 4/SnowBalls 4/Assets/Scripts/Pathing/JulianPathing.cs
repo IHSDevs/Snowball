@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Diagnostics;//for timer
 
-
-public class JooleanPathing : MonoBehaviour {
+public class JulianPathing : MonoBehaviour {
 
 	public Grid grid;
 	public Transform start;
@@ -11,24 +11,49 @@ public class JooleanPathing : MonoBehaviour {
 
 	int count = 0;
 
+	bool oneShot = true;
+	bool oneShotTwo = true;
+
 	Queue processQueue;
 
 	void Start ()
 	{
+		Stopwatch timer1 = new Stopwatch();
+		if (oneShotTwo) {
+			timer1.Start();
+		}
+
 		PopulateGrid ();
+		
+		if (oneShotTwo) {
+			timer1.Stop ();
+			print(timer1.ElapsedMilliseconds + "initial");
+		}
+
+		//print (grid.NodeFromPos(start.position).X + " " + grid.NodeFromPos(start.position).Y);
 		//grid.CreateGrid ();
-		print (grid.NodeFromPos(finish.position).Distance);
+		//print (grid.NodeFromPos(finish.position).Distance);
+	}
+
+	void Update ()
+	{
+		Stopwatch timer = new Stopwatch();
+		if (oneShot) {
+			timer.Start ();
+		}
 
 		Node testNode = grid.NodeFromPos(finish.position);
 		while (testNode.Parent != null) {
 			testNode.testColor = true;
 			testNode = testNode.Parent;
 		}
-	}
 
-	void Update ()
-	{
-
+		timer.Stop ();
+		if (oneShot) {
+			print (timer.ElapsedMilliseconds);
+			oneShot = false;
+		}
+	
 		//grid.NodeFromPos (test.position).Traversible = false;
 	}
 
@@ -63,12 +88,11 @@ public class JooleanPathing : MonoBehaviour {
 			for (int y = -1; y <= 1; y ++) {
 				dir ++;//increment dir
 				if (!(x == 0 && y == 0)) {//index is not self
-
 					if(!grid.IsOOB(x+xPos, y+yPos)) {//if not out of bounds
 
 						temp = grid.NodeFromCoord(x+xPos,y+yPos);//sets temp Node to current index
 
-						if (n.Distance < temp.Distance && temp.Traversible) { // || temp.Diagonal && n.Distance == temp.Distance) {//n path faster than temp path, or n path equal to temp path and temp set diagonally
+						if (n.Distance + 1 < temp.Distance && temp.Traversible) { // || temp.Diagonal && n.Distance == temp.Distance) {//n path faster than temp path, or n path equal to temp path and temp set diagonally
 
 							temp.Distance = n.Distance + 1;//set temp path equal to n path
 							temp.Direction = dir;
@@ -89,7 +113,6 @@ public class JooleanPathing : MonoBehaviour {
 								temp.Diagonal = true;
 							}*/
 							count ++;
-
 							processQueue.Enqueue (temp);//Enqueues temp.
 						}
 					}

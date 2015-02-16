@@ -54,7 +54,7 @@
      <Compile Include="Assets\Scripts\MenuScript.cs" />
      <Compile Include="Assets\Scripts\Movement.cs" />
      <Compile Include="Assets\Scripts\Pathing\Grid.cs" />
-     <Compile Include="Assets\Scripts\Pathing\JooleanPathing.cs" />
+     <Compile Include="Assets\Scripts\Pathing\JulianPathing.cs" />
      <Compile Include="Assets\Scripts\Pathing\Node.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\ProjectObject.cs" />
