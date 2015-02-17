@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
 	public Camera mainCamera;
 	public float snowballVelocity = 40;
 	public int maxBalls = 20;
+	public bool isMobile;
 
 
 	Animation animationList;
@@ -31,17 +32,22 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		float rotateX = Input.GetAxis ("Mouse X") * mouseSensitivity;
-		
-		this.transform.Rotate (0, rotateX, 0);//Rotates Player
-		
-		verticalRotation -= Input.GetAxis ("Mouse Y") * mouseSensitivity;
-		
-		verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
-		
-		Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
-
+		if (isMobile) {
+			if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) {
+				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
+				float rotateX = touchDeltaPosition.x * mouseSensitivity;
+				this.transform.Rotate (0, rotateX, 0);//Rotates Player
+				verticalRotation -= Input.GetAxis ("Mouse Y") * mouseSensitivity;
+				verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
+				Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
+			}
+		} else {
+			float rotateX = Input.GetAxis ("Mouse X") * mouseSensitivity;
+			this.transform.Rotate (0, rotateX, 0);//Rotates Player
+			verticalRotation -= Input.GetAxis ("Mouse Y") * mouseSensitivity;
+			verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
+			Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
+		}
 		//USE FOR MOVEMENT
 		//currRot = Camera.main.transform.rotation.ToEulerAngles ();
 
