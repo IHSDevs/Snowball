@@ -8,13 +8,14 @@ public class JulianPathing : MonoBehaviour
 	public bool spawnNodeBoys, showPath;
 	public Grid grid;
 	public Transform start, finish, test;
+	public float spawnRate;
 
 	Queue processQueue;
 
 	void Start ()
 	{
 		PopulateGrid ();
-		InvokeRepeating("SpawnNodeBoy", 0, .05f);
+		InvokeRepeating("SpawnNodeBoy", 0, spawnRate);
 	}
 
 	void Update () 
@@ -24,11 +25,12 @@ public class JulianPathing : MonoBehaviour
 
 	void SpawnNodeBoy() 
 	{
-		if (spawnNodeBoys && grid.NodeFromPos(finish.position).Traversible) 
+		var randy = new Vector3 (Random.Range(-5f,5f),0,Random.Range(-5f,5f));
+		if (spawnNodeBoys && grid.NodeFromPos(randy).Traversible) 
 		{
 			NodeBoy myBoi = transform.gameObject.AddComponent<NodeBoy> ();
-			myBoi.Position = finish.position;
-			myBoi.Path = GetPathFromPos(finish.position);
+			myBoi.Position = randy;
+			myBoi.Path = GetPathFromPos(randy);
 		}
 	}
 

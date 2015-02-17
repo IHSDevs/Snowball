@@ -4,80 +4,100 @@ using System.Collections;
 
 public class SnowmanController : MonoBehaviour {
 
-	Quaternion upRotation;
-
-	public float howClose;
-
-	public GameObject spurt;
-	public GameObject explosion;
-	public int explosionLimit = 1;
-	public float health = 100f;
+	public GameObject spurt, explosion;
 	
-	/**
-	public float headShot = 100f;
-	public float bodyShot = 50f;
-	public float legShot = 25f;*/
-	
-	public Jump myJump;
+	public Jump jump;
 
 	//my ultimate target location
 	public Vector3 myGoal;
 	
 	//gibs used upon death
-	public Transform GibNose;
-	public Transform GibEye;
-	public Transform GibButton;
+	public Transform GibNose, GibEye, GibButton;
 
 	//hit count for individual segments
-	private int headCount = 0;
-	private int bodyCount = 0;
-	private int legsCount = 0;
+	private int headCount, bodyCount, legsCount, explosionLimit;
 
 	//damage multiplier for body segments
-	public float headMultiplier;
-	public float bodyMultiplier;
-	public float legsMultiplier;
+	public float headMultiplier, bodyMultiplier, legsMultiplier, health, howClose;
 
 	//transforms for body segments
-	public Transform head;
-	public Transform body;
-	public Transform legs;
+	public Transform head, body, legs;
 
 	//hitboxes of body segments
-	public ProjectileCounter headCounter;
-	public ProjectileCounter bodyCounter;
-	public ProjectileCounter legsCounter;
+	public ProjectileCounter headCounter, bodyCounter, legsCounter;
 
 	//the path to be followed
 	Vector3[] myPath;
 	int pathProgress = 0;
 
 	//controls the spurt effect of snowman decapitation
-	GameObject spurtCloneBody;
-	GameObject spurtCloneLegs;
+	GameObject spurtCloneBody, spurtCloneLegs;
 
 	//used to remove limbs
-	bool alive = true;
-	bool hasLegs = true;
-	bool hasHead = true;
+	bool alive, hasLegs, hasHead, jumping;
+
+	//list of animations
+	Animation[] animationList;
+
+	//upwards rotaiton
+	Quaternion upRotation;
 
 
 	void Start () {
+		jumping = false;
+
+		health = 100f;
+
+		headCount = 0;
+		bodyCount = 0;
+		legsCount = 0;
+
+		alive = true;
+		hasLegs = true;
+		hasHead = true;
+
+		animationList = GetComponents <Animation> ();
+
 		//stores the upwards facing rotation
 		upRotation = Quaternion.LookRotation (Vector3.up, Vector3.up);
 	}
-	
+
+	//This class is a disaster. Needs reorganization
 	void Update () {
+
+		if (alive && jump.Grounded && !jumping) {
+			StartCoroutine ("JumpAnimationSequencer");
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		//updates hit count of each segment
 		headCount = headCounter.getHits ();
 		bodyCount = bodyCounter.getHits ();
 		legsCount = legsCounter.getHits ();
 
-		//increments pathProgress once waypoint is reached, and sets myJump's new waypoint
+		//increments pathProgress once waypoint is reached, and sets jump's new waypoint
 
 		if (reachedWaypoint () && pathProgress < myPath.Length - 1) {
 			pathProgress ++;
-			myJump.setWaypoint(myPath[pathProgress]);
+			jump.setWaypoint(myPath[pathProgress]);
 		}
 
 		//destroys legs if legs are still alive and damaged
@@ -119,8 +139,32 @@ public class SnowmanController : MonoBehaviour {
 				}
 			}
 		}
+	}
 
-		
+	//handles all the animation stuff involved with jumping
+	IEnumerator JumpAnimationSequencer()
+	{
+		jumping = true;
+
+		animationList[0].Play("SnowManJump1");
+
+		yield return new WaitForSeconds(.2f);
+
+		jump.Launch();
+
+		yield return new WaitForSeconds(.4f);
+
+		animationList[0].Stop("SnowManJump1");
+
+		if (jump.Grounded) {
+			animationList[0].Play("SnowManJump1");
+		}
+
+		if (!animationList[0].IsPlaying("SnowManJump1")) {
+			jumping = false;
+		}
+
+
 	}
 	
 	//sets the health of snowman
@@ -132,9 +176,11 @@ public class SnowmanController : MonoBehaviour {
 	//destroys the entire snowman with cute effects
 	IEnumerator destroySnowman()
 	{
+		Destroy (GetComponent<Jump> ());
+		Destroy (GetComponent<Animation> ());
 		Destroy (transform.GetComponent<Attack> ());
 		ScoreManager.score += 1;
-		myJump.setJumpMagnitude(0f);
+		jump.setJumpMagnitude(0f);
 
 		head.gameObject.AddComponent<Rigidbody> ();
 		body.gameObject.AddComponent<Rigidbody> ();
@@ -198,9 +244,9 @@ public class SnowmanController : MonoBehaviour {
 	//destroys the snowman's legs using cute effects
 	void destroyLegs() {
 		legs.gameObject.SetActive(false);
-		myJump.setHeight(.5f);
-		myJump.setJumpMagnitude(3f);
-		myJump.setJumpAngle(70f);
+		jump.setHeight(.5f);
+		jump.setJumpMagnitude(3f);
+		jump.setJumpAngle(70f);
 		
 		Instantiate (explosion, transform.position + Vector3.up*.5f, transform.rotation);
 
