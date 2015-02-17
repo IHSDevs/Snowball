@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour {
 
 	Queue SnowballQueue;
 	int queueLen = 0;
-
 	float verticalRotation = 0;
+
 
 	bool canFire = true;
 
@@ -30,24 +30,24 @@ public class PlayerController : MonoBehaviour {
 		SnowballQueue = new Queue ();
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
+	float rotateX = 0;
+
 		if (isMobile) {
 			if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) {
 				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-				float rotateX = touchDeltaPosition.x * mouseSensitivity;
-				this.transform.Rotate (0, rotateX, 0);//Rotates Player
-				verticalRotation -= Input.GetAxis ("Mouse Y") * mouseSensitivity;
-				verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
-				Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
+				rotateX = touchDeltaPosition.x * mouseSensitivity;
+				verticalRotation -= touchDeltaPosition.y * mouseSensitivity;
 			}
 		} else {
-			float rotateX = Input.GetAxis ("Mouse X") * mouseSensitivity;
-			this.transform.Rotate (0, rotateX, 0);//Rotates Player
+			rotateX = Input.GetAxis ("Mouse X") * mouseSensitivity;
 			verticalRotation -= Input.GetAxis ("Mouse Y") * mouseSensitivity;
-			verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
-			Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
+
 		}
+		this.transform.Rotate (0, rotateX, 0);//Rotates Player
+		verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
+		Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
 		//USE FOR MOVEMENT
 		//currRot = Camera.main.transform.rotation.ToEulerAngles ();
 
@@ -55,14 +55,16 @@ public class PlayerController : MonoBehaviour {
 		if (!animationList.animation.IsPlaying("ThrowBall")) {
 			animationList.animation.Rewind("ThrowBall");
 		}
-		if (Input.GetButtonDown ("Fire1")) {
-			animationList.animation.Play("ThrowBall");
-			StartCoroutine("fireDelay");
-			/**
-			Transform t = Instantiate(snowball, myTransform.position + mainCamera.transform.forward + mainCamera.transform.up + mainCamera.transform.right*.5f, Camera.main.transform.rotation) as Transform;
-			GameObject objectClone = t.gameObject;
-			objectClone.rigidbody.velocity = mainCamera.transform.forward*15;
-			*/
+		if (isMobile) {
+			if (Input.touchCount > 1) {
+				animationList.animation.Play ("ThrowBall");
+				StartCoroutine ("fireDelay");
+			}
+		} else {
+			if (Input.GetButtonDown ("Fire1")) {
+				animationList.animation.Play ("ThrowBall");
+				StartCoroutine ("fireDelay");
+			}
 		}
 	}
 
