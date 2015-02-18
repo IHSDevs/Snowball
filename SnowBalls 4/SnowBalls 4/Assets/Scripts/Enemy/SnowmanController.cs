@@ -150,9 +150,16 @@ public class SnowmanController : MonoBehaviour {
 
 		yield return new WaitForSeconds(.2f);
 
+		if (!alive) {
+			return false;
+		}
 		jump.Launch();
 
 		yield return new WaitForSeconds(.4f);
+
+		if (!alive) {
+			return false;
+		}
 
 		animationList[0].Stop("SnowManJump1");
 

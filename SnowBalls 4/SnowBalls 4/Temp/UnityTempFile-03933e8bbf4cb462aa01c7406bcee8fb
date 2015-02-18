@@ -7,19 +7,17 @@
 -r:'/Applications/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll'
 -define:UNITY_4_6_1
 -define:UNITY_4_6
--define:UNITY_STANDALONE_WIN
+-define:UNITY_ANDROID
 -define:ENABLE_MICROPHONE
 -define:ENABLE_TEXTUREID_MAP
 -define:ENABLE_UNITYEVENTS
 -define:ENABLE_NEW_HIERARCHY 
 -define:ENABLE_AUDIO_FMOD
--define:UNITY_STANDALONE
 -define:ENABLE_MONO
 -define:ENABLE_TERRAIN
 -define:ENABLE_SUBSTANCE
 -define:ENABLE_GENERICS
 -define:INCLUDE_WP8SUPPORT
--define:ENABLE_MOVIES
 -define:ENABLE_WWW
 -define:ENABLE_IMAGEEFFECTS
 -define:ENABLE_4_6_FEATURES
@@ -31,11 +29,11 @@
 -define:ENABLE_PHYSICS
 -define:ENABLE_CACHING
 -define:ENABLE_CLOTH
+-define:UNITY_ANDROID_API
 -define:ENABLE_2D_PHYSICS
 -define:ENABLE_SHADOWS
 -define:ENABLE_AUDIO
 -define:ENABLE_NAVMESH_CARVING
--define:ENABLE_DUCK_TYPING
 -define:ENABLE_SINGLE_INSTANCE_BUILD_SETTING
 -define:ENABLE_PROFILER
 -define:UNITY_EDITOR
@@ -58,6 +56,7 @@
 'Assets/Scripts/Pathing/WaypointController.cs'
 'Assets/Scripts/Player/HealthPlayer.cs'
 'Assets/Scripts/Player/PlayerController.cs'
+'Assets/Scripts/Procedural Generation/TerrainGenerator.cs'
 'Assets/Scripts/Projectile/ProjectObject.cs'
 'Assets/Scripts/Projectile/ProjectileController.cs'
 'Assets/Scripts/Projectile/ProjectileCounter.cs'
