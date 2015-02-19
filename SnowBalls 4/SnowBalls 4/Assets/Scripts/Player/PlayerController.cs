@@ -36,9 +36,10 @@ public class PlayerController : MonoBehaviour {
 
 		if (isMobile) {
 			if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) {
+				float mSense=mouseSensitivity/2;
 				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-				rotateX = touchDeltaPosition.x * mouseSensitivity;
-				verticalRotation -= touchDeltaPosition.y * mouseSensitivity;
+				rotateX = touchDeltaPosition.x * mSense;
+				verticalRotation -= touchDeltaPosition.y * mSense;
 			}
 		} else {
 			rotateX = Input.GetAxis ("Mouse X") * mouseSensitivity;
