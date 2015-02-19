@@ -7,9 +7,6 @@ public class SnowmanController : MonoBehaviour {
 	public GameObject spurt, explosion;
 	
 	public Jump jump;
-
-	//my ultimate target location
-	public Vector3 myGoal;
 	
 	//gibs used upon death
 	public Transform GibNose, GibEye, GibButton;
@@ -28,7 +25,7 @@ public class SnowmanController : MonoBehaviour {
 
 	//the path to be followed
 	Vector3[] myPath;
-	int pathProgress = 0;
+	int index = 0;
 
 	//controls the spurt effect of snowman decapitation
 	GameObject spurtCloneBody, spurtCloneLegs;
@@ -93,11 +90,18 @@ public class SnowmanController : MonoBehaviour {
 		bodyCount = bodyCounter.getHits ();
 		legsCount = legsCounter.getHits ();
 
-		//increments pathProgress once waypoint is reached, and sets jump's new waypoint
+		//increments index once waypoint is reached, and sets jump's new waypoint
 
-		if (reachedWaypoint () && pathProgress < myPath.Length - 1) {
-			pathProgress ++;
-			jump.setWaypoint(myPath[pathProgress]);
+		if (!jump.InRange && reachedWaypoint ()) {
+
+			index ++;
+
+			if (myPath.Length == index) {
+				jump.InRange = true;
+			}
+			else {
+				jump.setWaypoint(myPath[index]);
+			}
 		}
 
 		//destroys legs if legs are still alive and damaged
@@ -225,9 +229,10 @@ public class SnowmanController : MonoBehaviour {
 	}
 
 	//sets the path of the snowman
-	public void setPath (Vector3[] path, int len){
-		myPath = new Vector3[len];
+	public void setPath (Vector3[] path){
+		//myPath = new Vector3[];
 		myPath = path;
+		jump.setWaypoint(path[0]);
 	}
 
 	//destroys the snowman's head using cute effects
@@ -262,7 +267,7 @@ public class SnowmanController : MonoBehaviour {
 
 	//returns whether or not waypoint has been reached
 	bool reachedWaypoint() {
-		if (Vector3.Distance (transform.position, myPath[pathProgress]) < 5) {
+		if (myPath[index] != null && Vector3.Distance (transform.position, myPath[index]) < 2) {
 			return true;
 		}
 		return false;

@@ -10,7 +10,7 @@ public class Jump : MonoBehaviour {
 	
 	Vector3 waypoint, jumpVector, gravityVector, jumpDirection;
 
-	bool grounded, flipFlopper;
+	bool grounded, flipFlopper, inRange;
 
 	LayerMask layerMask;
 
@@ -24,7 +24,10 @@ public class Jump : MonoBehaviour {
 		//timer = new Stopwatch();
 
 		height = 1;
-		
+
+
+		inRange = false;
+
 		waypoint = new Vector3 (0, 0, 0);
 		jumpVector = new Vector3(0,0,0);
 		gravityVector = new Vector3(0,-9.8f,0);
@@ -67,8 +70,7 @@ public class Jump : MonoBehaviour {
 	
 	// Tries to jump. if succeeds, return true; else, return false
 	public void Launch () {
-
-		//Debug.DrawLine (transform.position + Vector3.up*2, transform.position, Color.green, .1f, true);
+		if (!inRange) {
 
 		jumpDirection = (waypoint - transform.position);
 		jumpDirection.y = 0;
@@ -76,6 +78,8 @@ public class Jump : MonoBehaviour {
 		transform.rigidbody.velocity = Vector3.zero;
 
 		jumpVector = Quaternion.AngleAxis(-(jumpAngle), Vector3.Cross(Vector3.up, jumpDirection) ) *jumpDirection.normalized*jumpMagnitude;
+
+		}
 	}
 
 
@@ -114,5 +118,14 @@ public class Jump : MonoBehaviour {
 	public void setJumpAngle(float angle)
 	{
 		jumpAngle = angle;
+	}
+
+	public bool InRange {
+		get {
+			return inRange;
+		}
+		set {
+			inRange = value;
+		}
 	}
 }

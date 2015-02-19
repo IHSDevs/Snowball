@@ -7,20 +7,21 @@ public class JulianPathing : MonoBehaviour
 
 	public bool spawnNodeBoys, showPath;
 	public Grid grid;
-	public Transform start, finish, test;
+	public Transform end, start;
 	public float spawnRate;
 
 	Queue processQueue;
 
-	void Start ()
+	void Awake ()
 	{
 		PopulateGrid ();
+
 		InvokeRepeating("SpawnNodeBoy", 0, spawnRate);
 	}
 
 	void Update () 
 	{
-		GetPathFromPos(finish.position);
+		GetPathFromPos(start.position);
 	}
 
 	void SpawnNodeBoy() 
@@ -40,6 +41,7 @@ public class JulianPathing : MonoBehaviour
 		//Stopwatch myTimer = new Stopwatch();
 		//myTimer.Start();
 		Node temp = grid.NodeFromPos(pos);
+		temp.testColor = true;
 		Vector3[] path = new Vector3[temp.DegreesSeperation];
 
 		//adds all waypoint Nodes to path
@@ -62,12 +64,12 @@ public class JulianPathing : MonoBehaviour
 
 		grid.CreateGrid ();
 
-		Node startNode = grid.NodeFromPos (start.position);
+		Node endNode = grid.NodeFromPos (end.position);
 
-		startNode.Distance = 0;
-		startNode.DegreesSeperation = 0;
+		endNode.Distance = 0;
+		endNode.DegreesSeperation = 0;
 
-		processQueue.Enqueue (startNode);
+		processQueue.Enqueue (endNode);
 
 		while (processQueue.Count > 0)
 		{

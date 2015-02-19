@@ -2,11 +2,13 @@
 using System.Collections;
 
 public class Spawner : MonoBehaviour {
-	
+
+	public Vector3 defaultPos;
 	public Transform defaultEnemy;
 	public float timeDelay;
 	public int wave;
-	public WaypointController waypointAggregator;
+
+	public JulianPathing pathFinder;
 
 	Vector3[] myPath;
 	int pathLen;
@@ -14,31 +16,25 @@ public class Spawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		waypointAggregator.aggregateWaypoints ();
+		pathFinder = GetComponent<JulianPathing>();
 
 		InvokeRepeating ("SpawnDefault", 0, timeDelay);
 
-		//stores the length of waypointAggregator's path
-		pathLen = waypointAggregator.getPathLength ();
-
-		//sets myPath's length to the length of waypointAggregator's path
-		myPath = new Vector3[pathLen];
-
-		//sets myPath to waypointAggregator's path
-		myPath = waypointAggregator.getPath();
+		myPath = pathFinder.GetPathFromPos(defaultPos);
 	}
 
 	//spawns the defaultEnemy
 	void SpawnDefault ()
 	{
-		//spawn position - should probably be moved to a public variable eventually
-		Vector3 position = new Vector3 (0, 0.07116175f, -20);
+		Vector3 spawnPos = new Vector3(defaultPos.x + Random.Range(-10,10), defaultPos.y, defaultPos.z + Random.Range(-10,10));
 
 		//instantiates a defaultEnemy named mobClone
-		Transform mobClone = Instantiate (defaultEnemy, position, Quaternion.identity) as Transform;
+		Transform mobClone = Instantiate (defaultEnemy, spawnPos, Quaternion.identity) as Transform;
+
+		myPath = pathFinder.GetPathFromPos(spawnPos); 
 
 		//gives cloned enemy a path
-		mobClone.GetComponent<SnowmanController>().setPath (myPath, pathLen);
+		mobClone.GetComponent<SnowmanController>().setPath (myPath);
 
 	}
 

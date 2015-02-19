@@ -16,12 +16,12 @@ public class NodeBoy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (path != null) {
+			if (index == path.Length || path[index] == null) {
+				Destroy(this);
+			}
 			position = Vector3.MoveTowards(position, path[index], speed*Time.deltaTime);
 			if (position == path[index]) {
 				index ++;
-			}
-			if (index == path.Length) {
-				Destroy(this);
 			}
 		}
 	}

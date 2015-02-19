@@ -18,7 +18,7 @@ public class Grid : MonoBehaviour {
 	//instantiates an array of Nodes and returns number of obstacle Nodes
 	public void CreateGrid ()
 	{
-		pos = transform.position;
+		pos = transform.position + Vector3.one*(size/2);
 		grid = new Node[length, length];
 		nodeRadius = size / (length*2);
 		nodeDiameter = size / length;
@@ -32,7 +32,7 @@ public class Grid : MonoBehaviour {
 			for (int j = 0; j < length; j ++) {
 
 				currentX = (pos.x - size/2) + nodeDiameter*i + nodeRadius;
-				currentZ = (pos.y - size/2) + nodeDiameter*j + nodeRadius;
+				currentZ = (pos.z - size/2) + nodeDiameter*j + nodeRadius;
 
 				currNodePos = new Vector3(currentX, 0, currentZ);
 
@@ -62,7 +62,7 @@ public class Grid : MonoBehaviour {
 	//Takes a pos and returns the correpsonding node, if possible
 	public Node NodeFromPos(Vector3 position)
 	{
-		Vector3 posDiff = position + pos + Vector3.one * size/2;//difference in position
+		Vector3 posDiff = position - pos + Vector3.one * size/2;//difference in position
 		posDiff /= nodeDiameter;
 
 		int i = ClampToInt (posDiff.x, 0, length - 1);
