@@ -12,7 +12,7 @@ public class SnowmanController : MonoBehaviour {
 	public Transform GibNose, GibEye, GibButton;
 
 	//hit count for individual segments
-	private int headCount, bodyCount, legsCount, explosionLimit;
+	private int headDmg, bodyDmg, legsDmg, explosionLimit;
 
 	//damage multiplier for body segments
 	public float headMultiplier, bodyMultiplier, legsMultiplier, health, howClose;
@@ -21,7 +21,7 @@ public class SnowmanController : MonoBehaviour {
 	public Transform head, body, legs;
 
 	//hitboxes of body segments
-	public ProjectileCounter headCounter, bodyCounter, legsCounter;
+	public ProjectileCounter headCount, bodyCount, legsCount;
 
 	//the path to be followed
 	Vector3[] myPath;
@@ -45,9 +45,9 @@ public class SnowmanController : MonoBehaviour {
 
 		health = 100f;
 
-		headCount = 0;
-		bodyCount = 0;
-		legsCount = 0;
+		headDmg = 0;
+		bodyDmg = 0;
+		legsDmg = 0;
 
 		alive = true;
 		hasLegs = true;
@@ -66,29 +66,14 @@ public class SnowmanController : MonoBehaviour {
 			StartCoroutine ("JumpAnimationSequencer");
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		//updates hit count of each segment
-		headCount = headCounter.getHits ();
-		bodyCount = bodyCounter.getHits ();
-		legsCount = legsCounter.getHits ();
+
+		headDmg += headCount.GetDamage ();
+		bodyDmg += bodyCount.GetDamage ();
+		legsDmg += legsCount.GetDamage ();
+
+		health = 100 - (headDmg + bodyDmg + legsDmg);
+		print (health);
 
 		//increments index once waypoint is reached, and sets jump's new waypoint
 
@@ -105,18 +90,19 @@ public class SnowmanController : MonoBehaviour {
 		}
 
 		//destroys legs if legs are still alive and damaged
-		if (hasLegs && legsCount > 0) {
+		if (hasLegs && legsDmg > 0) {
 			hasLegs = false;
 			destroyLegs();
 		}
 
+		/**
 		//calculates health, might want to change later
-		if ((headMultiplier * headCount + bodyMultiplier * bodyCount + legsMultiplier * legsCount) >= health) {
+		if ((headMultiplier * headDmg + bodyMultiplier * bodyDmg + legsMultiplier * legsDmg) >= health) {
 			health = 0;
-		}
+		}*/
 
 		//destroys head if it has a head and is alive
-		if (hasHead && headCount > 0) {
+		if (hasHead && headDmg > 0) {
 			hasHead = false;
 			alive = false;
 			destroyHead();
@@ -265,10 +251,12 @@ public class SnowmanController : MonoBehaviour {
 		Instantiate(GibNose, transform.position, transform.rotation);
 	}
 
-	//returns whether or not waypoint has been reached
+	//returns whether or not waypoint has been reached. This method is shit and needs a revision
 	bool reachedWaypoint() {
 		if (myPath[index] != null && Vector3.Distance (transform.position, myPath[index]) < 2) {
+
 			return true;
+
 		}
 		return false;
 	}

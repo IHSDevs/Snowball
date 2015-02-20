@@ -2,75 +2,234 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-	public float mouseSensitivity = 2.0f;
-	public float lookRange = 60.0f;
-	public Transform snowball;
-	public Camera mainCamera;
-	public float snowballVelocity = 40;
-	public int maxBalls = 20;
+	
 	public bool isMobile;
+	public float mouseSensitivity, lookRange, snowballVelocity, icicleVelocity, shovelVelocity, playerHeight;
+	public Transform snowball, icicle;
+	public GameObject mitten, icicleLauncher, shovel;
+	public Camera mainCamera;
+	public int maxBalls = 20;
 
+	private Animation animationList;
 
-	Animation animationList;
+	//Projectile Queue
+	private Queue SnowballQueue;
+	private int queueLen, activeWeapon;
+	private float verticalRotation = 0;
 
-	Transform myTransform;
+	//Can fire weapon?
+	private bool canFire = true;
 
-	Queue SnowballQueue;
-	int queueLen = 0;
-	float verticalRotation = 0;
-
-
-	bool canFire = true;
+	private Vector3 transformShift;
 
 	// Use this for initialization
 	void Start () {
+
+		queueLen = 0;
+
+		//3 = mittens, 1 = icicle launcher, 2 = shovel
+		activeWeapon = 3;
+
 		Screen.lockCursor = true;
-		myTransform = GetComponent<Transform> ();
 		animationList = GetComponentInChildren <Animation> ();
 		SnowballQueue = new Queue ();
-	}
-	
 
-	void Update () {
-	float rotateX = 0;
+		//Determines initial y position
+		RaycastHit hit;
+
+		if (Physics.Raycast (transform.position + Vector3.up * 10f, Vector3.down, out hit)) {
+			transform.position -= Vector3.down * (10 - hit.distance + playerHeight);
+		}
+	}
+
+	//Controls player rotation
+	void Rotate () {
+
+		float rotateX = 0;
 
 		if (isMobile) {
 			if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) {
+				
 				float mSense=mouseSensitivity/2;
 				Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
 				rotateX = touchDeltaPosition.x * mSense;
 				verticalRotation -= touchDeltaPosition.y * mSense;
+				
+				this.transform.Rotate (0, rotateX, 0);//Rotates Player
+				
+				verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
+				
+				Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
 			}
-		} else {
+		}
+		else {
+			
 			rotateX = Input.GetAxis ("Mouse X") * mouseSensitivity;
 			verticalRotation -= Input.GetAxis ("Mouse Y") * mouseSensitivity;
-
+			
+			this.transform.Rotate (0, rotateX, 0);//Rotates Player
+			
+			verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
+			
+			Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
 		}
-		this.transform.Rotate (0, rotateX, 0);//Rotates Player
-		verticalRotation = Mathf.Clamp (verticalRotation, -lookRange, lookRange);
-		Camera.main.transform.localRotation = Quaternion.Euler (verticalRotation, 0, 0);
-		//USE FOR MOVEMENT
-		//currRot = Camera.main.transform.rotation.ToEulerAngles ();
+	}
 
-		//Animations
-		if (!animationList.animation.IsPlaying("ThrowBall")) {
-			animationList.animation.Rewind("ThrowBall");
-		}
+	//Checks if player is currently trying to fire
+	void CheckFire () {
 		if (isMobile) {
 			if (Input.touchCount > 1) {
 				animationList.animation.Play ("ThrowBall");
-				StartCoroutine ("fireDelay");
+				StartCoroutine ("icicleFire");
 			}
-		} else {
+		}
+		else {
 			if (Input.GetButtonDown ("Fire1")) {
-				animationList.animation.Play ("ThrowBall");
-				StartCoroutine ("fireDelay");
+				if (activeWeapon == 3) {
+					animationList.animation.Play ("ThrowBall");
+					StartCoroutine ("mittenFire");
+				}
+				else if (activeWeapon == 1) {
+					animationList.animation.Play ("ThrowBall");
+					StartCoroutine ("icicleFire");
+				}
+				else if (activeWeapon == 2) {
+					animationList.animation.Play ("ThrowBall");
+					StartCoroutine ("shovelFire");
+				}
 			}
 		}
 	}
 
-	IEnumerator fireDelay(){
-		if (queueLen == maxBalls) {
+	//Updates Player
+	void Update () {
+
+		if (activeWeapon == 3 && !(animationList.animation.IsPlaying("ThrowBall"))) {
+			animationList.animation.Rewind("ThrowBall");
+		}
+
+		Rotate();
+		CheckWeapon();
+		CheckFire();
+
+	}
+
+	//checks which weapon is currently drawn
+	void CheckWeapon () {
+
+		if (isMobile) {
+
+		}
+		else {
+			if (Input.GetKeyDown ("3") ) {//mitten
+				activeWeapon = 3;
+
+				DisableWeapons();
+				mitten.SetActive(true);
+
+
+			}
+			else if (Input.GetKeyDown ("1") ) {//icicle
+				activeWeapon = 1;
+
+				DisableWeapons();
+				icicleLauncher.SetActive(true);
+
+
+			}
+			else if (Input.GetKeyDown ("2") ) {//shovel
+				activeWeapon = 2;
+
+				DisableWeapons();
+				shovel.SetActive(true);
+
+
+			}
+		}
+
+	}
+
+	//Disables all weapon GameObjects
+	void DisableWeapons() {
+		mitten.SetActive(false);
+		icicleLauncher.SetActive(false);
+		shovel.SetActive(false);
+	}
+
+	void fireProjectile(Transform projectile, float velocity, int quantity, bool variance) {
+
+		//adjusts the projectile
+		transformShift = Vector3.zero;//mainCamera.transform.forward + mainCamera.transform.up + mainCamera.transform.right*.5f;
+
+		for (;quantity > 0; quantity --) {
+
+			if (variance) {
+				transformShift = transform.right*Random.Range (.3f,1) + transform.up*Random.Range (0,.2f) + transform.forward * Random.Range (.3f,1);
+			}
+			else {
+				transformShift = transform.right * .3f;
+			}
+
+			Transform t = Instantiate(projectile, mainCamera.transform.position + transformShift, Camera.main.transform.rotation) as Transform;
+
+			GameObject objectClone = t.gameObject;
+			objectClone.rigidbody.velocity = mainCamera.transform.forward*velocity;
+			
+			SnowballQueue.Enqueue (objectClone);
+			queueLen ++;
+		}
+
+	}
+
+	IEnumerator icicleFire(){
+
+		while (queueLen >= maxBalls) {
+			GameObject trash = (GameObject)SnowballQueue.Dequeue();
+			Destroy(trash);
+			queueLen --;
+		}
+		
+		if (!canFire) {
+			return false;
+		}
+		
+		canFire = false;
+		
+		fireProjectile(icicle, icicleVelocity, 1, false);
+		
+		yield return new WaitForSeconds(2f);
+		
+		canFire = true;
+
+	}
+
+	IEnumerator shovelFire(){
+
+		while (queueLen >= maxBalls) {
+			GameObject trash = (GameObject)SnowballQueue.Dequeue();
+			Destroy(trash);
+			queueLen --;
+		}
+		
+		if (!canFire) {
+			return false;
+		}
+		
+		canFire = false;
+
+		yield return new WaitForSeconds(.1f);
+
+		fireProjectile(snowball, shovelVelocity, 3, true);
+		
+		yield return new WaitForSeconds(.5f);
+		
+		canFire = true;
+
+	}
+
+	IEnumerator mittenFire(){
+
+		while (queueLen >= maxBalls) {
 			GameObject trash = (GameObject)SnowballQueue.Dequeue();
 			Destroy(trash);
 			queueLen --;
@@ -81,16 +240,14 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		canFire = false;
+
 		yield return new WaitForSeconds(.2f);
 
-		Transform t = Instantiate(snowball, myTransform.position + mainCamera.transform.forward + mainCamera.transform.up + mainCamera.transform.right*.5f, Camera.main.transform.rotation) as Transform;
+		fireProjectile(snowball, snowballVelocity, 1, false);
 
-		GameObject objectClone = t.gameObject;
-		objectClone.rigidbody.velocity = mainCamera.transform.forward*snowballVelocity;
-
-		SnowballQueue.Enqueue (objectClone);
-		queueLen ++;
 		yield return new WaitForSeconds(.8f);
+
 		canFire = true;
+
 	}
 }

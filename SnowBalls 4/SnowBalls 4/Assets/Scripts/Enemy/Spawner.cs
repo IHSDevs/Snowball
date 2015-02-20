@@ -5,28 +5,57 @@ public class Spawner : MonoBehaviour {
 
 	public Vector3 defaultPos;
 	public Transform defaultEnemy;
-	public float timeDelay;
+	public float timeDelay, spawnDistance;
 	public int wave;
 
 	public JulianPathing pathFinder;
+	public Grid pathGrid;
 
-	Vector3[] myPath;
-	int pathLen;
+	private Vector3[] myPath;
+	private int pathLen;
+	private RaycastHit hit;
 	
 	// Use this for initialization
 	void Start () {
 
-		pathFinder = GetComponent<JulianPathing>();
-
 		InvokeRepeating ("SpawnDefault", 0, timeDelay);
 
-		myPath = pathFinder.GetPathFromPos(defaultPos);
+		//myPath = pathFinder.GetPathFromPos(defaultPos);
+
 	}
 
 	//spawns the defaultEnemy
 	void SpawnDefault ()
 	{
-		Vector3 spawnPos = new Vector3(defaultPos.x + Random.Range(-10,10), defaultPos.y, defaultPos.z + Random.Range(-10,10));
+		Vector3 spawnPos;
+		bool validPos = false;
+		do {
+
+			float randomTheta = Random.Range (0, Mathf.PI/2);//0 to 90 degrees
+			float xCoord, yCoord, zCoord;
+
+			xCoord = spawnDistance * Mathf.Sin (randomTheta);
+			zCoord = spawnDistance * Mathf.Cos (randomTheta);
+
+			if (Physics.Raycast(new Vector3(xCoord, 10f, zCoord), Vector3.down, out hit)) {
+				yCoord = 10 - hit.distance;
+			}
+			else {
+				Debug.Log ("error: no collider present at spawn location");
+				yCoord = 0;
+			}
+
+			//print ("Theta " + randomTheta + " xCoord " + xCoord + " yCoord " + yCoord + " zCoord " + zCoord);
+
+			spawnPos = new Vector3(xCoord, yCoord, zCoord);
+
+			validPos = pathGrid.NodeFromPos (spawnPos).Traversible;
+
+		}
+		while (!validPos);
+
+
+
 
 		//instantiates a defaultEnemy named mobClone
 		Transform mobClone = Instantiate (defaultEnemy, spawnPos, Quaternion.identity) as Transform;

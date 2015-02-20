@@ -3,15 +3,16 @@ using System.Collections;
 
 public class ProjectileCounter : MonoBehaviour {
 
-	int hits = 0;
+	int accruedDamage = 0;
 
-	public int getHits()
-	{
-		return hits;
+	public void Damage(int dmg) {
+		accruedDamage += dmg;
+		print (dmg + " " + accruedDamage + " D:");
 	}
 
-	public void addHit()
-	{
-		hits ++;
+	public int GetDamage() {
+		int dmg = accruedDamage;
+		accruedDamage = 0;
+		return dmg;
 	}
 }

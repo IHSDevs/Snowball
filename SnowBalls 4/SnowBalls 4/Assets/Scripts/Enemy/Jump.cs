@@ -58,11 +58,15 @@ public class Jump : MonoBehaviour {
 
 	void Update()
 	{
-		grounded = Physics.Raycast (transform.position + Vector3.up*2, transform.TransformDirection (Vector3.down), height*2, layerMask);
+		RaycastHit hit;
+		grounded = Physics.Raycast (transform.position + Vector3.up*2, transform.TransformDirection (Vector3.down), out hit, height*2, layerMask);
+
 		if (!(jumpVector.y < 0 && grounded)) {
 			transform.position += jumpVector*Time.deltaTime;
 			jumpVector += gravityVector * Time.deltaTime;
 		}
+
+
 		Vector3 transitionDirection = Vector3.RotateTowards(transform.forward, jumpDirection, Mathf.PI*Time.deltaTime, 0f);
 		
 		transform.rotation = Quaternion.LookRotation(transitionDirection);
@@ -71,14 +75,14 @@ public class Jump : MonoBehaviour {
 	// Tries to jump. if succeeds, return true; else, return false
 	public void Launch () {
 		if (!inRange) {
-
-		jumpDirection = (waypoint - transform.position);
-		jumpDirection.y = 0;
-
-		transform.rigidbody.velocity = Vector3.zero;
-
-		jumpVector = Quaternion.AngleAxis(-(jumpAngle), Vector3.Cross(Vector3.up, jumpDirection) ) *jumpDirection.normalized*jumpMagnitude;
-
+			
+			jumpDirection = (waypoint - transform.position);
+			jumpDirection.y = 0;
+			
+			transform.rigidbody.velocity = Vector3.zero;
+			
+			jumpVector = Quaternion.AngleAxis(-(jumpAngle), Vector3.Cross(Vector3.up, jumpDirection) ) *jumpDirection.normalized*jumpMagnitude;
+			
 		}
 	}
 
