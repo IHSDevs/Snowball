@@ -1,11 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Enemy/SnowmanController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Player/PlayerController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Enemy/SnowmanController.cs" Line="73" Column="23" />
+      <File FileName="Assets/Scripts/Enemy/SnowmanController.cs" Line="120" Column="80" />
       <File FileName="Assets/Scripts/Projectile/ProjectileController.cs" Line="42" Column="65" />
-      <File FileName="Assets/Scripts/Projectile/ProjectileCounter.cs" Line="15" Column="14" />
+      <File FileName="Assets/Scripts/Projectile/ProjectileCounter.cs" Line="10" Column="45" />
       <File FileName="Assets/Scripts/Pathing/NodeBoy.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Player/PlayerController.cs" Line="171" Column="67" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

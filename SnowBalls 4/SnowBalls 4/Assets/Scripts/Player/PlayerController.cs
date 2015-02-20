@@ -167,7 +167,12 @@ public class PlayerController : MonoBehaviour {
 				transformShift = transform.right*Random.Range (.3f,1) + transform.up*Random.Range (0,.2f) + transform.forward * Random.Range (.3f,1);
 			}
 			else {
-				transformShift = transform.right * .3f;
+				if (activeWeapon == 1) {
+					transformShift = transform.right * .3f + transform.up * -.3f;
+				}
+				else {
+					transformShift = transform.right * .3f;
+				}
 			}
 
 			Transform t = Instantiate(projectile, mainCamera.transform.position + transformShift, Camera.main.transform.rotation) as Transform;
