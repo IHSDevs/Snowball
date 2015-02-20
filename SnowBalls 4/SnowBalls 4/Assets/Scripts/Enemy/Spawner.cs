@@ -1,28 +1,51 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour {
 
 	public Vector3 defaultPos;
 	public Transform defaultEnemy;
 	public float timeDelay, spawnDistance;
-	public int wave;
-
+	
 	public JulianPathing pathFinder;
 	public Grid pathGrid;
+
+	public GameObject scoreManager;
 
 	private Vector3[] myPath;
 	private int pathLen;
 	private RaycastHit hit;
-	
+	private int wave;
+	float secondsIntoGame=0;
+	Text text;
 	// Use this for initialization
 	void Start () {
 
-		InvokeRepeating ("SpawnDefault", 0, timeDelay);
-
+		InvokeRepeating ("SpawnManager", 0, timeDelay);
 		//myPath = pathFinder.GetPathFromPos(defaultPos);
 
 	}
+	float scoreManagerWave = 1;
+	void SpawnManager(){
+		secondsIntoGame++;
+		float wave = secondsIntoGame / 10;
+		wave = Mathf.Floor (wave);
+		wave = wave + 1;
+		float intoWave = secondsIntoGame % 10;
+		if (intoWave <5 && wave!=1) {//Break between waves
+			Debug.Log ("Break");
+		} else {//Activly Spawning Snowmen
+			for(int i = 0; i<wave; i++)
+				SpawnDefault();
+		}
+		if (scoreManagerWave <= wave) {
+			scoreManagerWave++;
+			scoreManager.SendMessage ("IncreaseWave");
+
+		}
+	}
+
 
 	//spawns the defaultEnemy
 	void SpawnDefault ()

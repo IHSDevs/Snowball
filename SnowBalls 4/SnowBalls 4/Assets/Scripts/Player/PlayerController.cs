@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour {
 
 		yield return new WaitForSeconds(.1f);
 
-		fireProjectile(snowball, shovelVelocity, 3, true);
+		fireProjectile(snowball, shovelVelocity, 4, true);
 		
 		yield return new WaitForSeconds(.5f);
 		
