@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour {
 	
 	public bool isMobile;
 	public float mouseSensitivity, lookRange, snowballVelocity, icicleVelocity, shovelVelocity, playerHeight;
-	public Transform snowball, icicle;
+	public Transform snowball, icicle, openCbow, closedCbow, propIcicle;
 	public GameObject mitten, icicleLauncher, shovel;
 	public Camera mainCamera;
 	public int maxBalls = 20;
@@ -199,12 +199,20 @@ public class PlayerController : MonoBehaviour {
 		}
 		
 		canFire = false;
+
+		openCbow.gameObject.SetActive(true);
+		closedCbow.gameObject.SetActive(false);
+		propIcicle.gameObject.SetActive(false);
 		
 		fireProjectile(icicle, icicleVelocity, 1, false);
 		
 		yield return new WaitForSeconds(2f);
 		
 		canFire = true;
+		
+		closedCbow.gameObject.SetActive(true);
+		openCbow.gameObject.SetActive(false);
+		propIcicle.gameObject.SetActive(true);
 
 	}
 
@@ -230,6 +238,11 @@ public class PlayerController : MonoBehaviour {
 		
 		canFire = true;
 
+	}
+
+	public void EnqueueProjectile (GameObject g) {
+		SnowballQueue.Enqueue (g);
+		queueLen ++;
 	}
 
 	IEnumerator mittenFire(){
