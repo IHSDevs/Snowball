@@ -5,7 +5,8 @@ public class PlayerController : MonoBehaviour {
 	
 	public bool isMobile;
 	public float mouseSensitivity, lookRange, snowballVelocity, icicleVelocity, shovelVelocity, playerHeight;
-	public Transform snowball, icicle, openCbow, closedCbow, propIcicle;
+	public Transform snowball, icicle, propIcicle;
+	public Transform[] openCbow, closedCbow;
 	public GameObject mitten, icicleLauncher, shovel;
 	public Camera mainCamera;
 	public int maxBalls = 20;
@@ -164,7 +165,7 @@ public class PlayerController : MonoBehaviour {
 		for (;quantity > 0; quantity --) {
 
 			if (variance) {
-				transformShift = transform.right*Random.Range (.3f,1) + transform.up*Random.Range (0,.2f) + transform.forward * Random.Range (.3f,1);
+				transformShift = transform.right*Random.Range (.3f,1) + transform.up*Random.Range (0,.7f) + transform.forward * Random.Range (.3f,1);
 			}
 			else {
 				if (activeWeapon == 1) {
@@ -188,11 +189,7 @@ public class PlayerController : MonoBehaviour {
 
 	IEnumerator icicleFire(){
 
-		while (queueLen >= maxBalls) {
-			GameObject trash = (GameObject)SnowballQueue.Dequeue();
-			Destroy(trash);
-			queueLen --;
-		}
+
 		
 		if (!canFire) {
 			return false;
@@ -200,8 +197,13 @@ public class PlayerController : MonoBehaviour {
 		
 		canFire = false;
 
-		openCbow.gameObject.SetActive(true);
-		closedCbow.gameObject.SetActive(false);
+		foreach (Transform t in openCbow) {
+			t.gameObject.SetActive(true);
+		}
+		foreach (Transform t in closedCbow) {
+			t.gameObject.SetActive(false);
+		}
+
 		propIcicle.gameObject.SetActive(false);
 		
 		fireProjectile(icicle, icicleVelocity, 1, false);
@@ -209,20 +211,27 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds(2f);
 		
 		canFire = true;
-		
-		closedCbow.gameObject.SetActive(true);
-		openCbow.gameObject.SetActive(false);
+
+		foreach (Transform t in openCbow) {
+			t.gameObject.SetActive(false);
+		}
+		foreach (Transform t in closedCbow) {
+			t.gameObject.SetActive(true);
+		}
+
 		propIcicle.gameObject.SetActive(true);
-
-	}
-
-	IEnumerator shovelFire(){
 
 		while (queueLen >= maxBalls) {
 			GameObject trash = (GameObject)SnowballQueue.Dequeue();
 			Destroy(trash);
 			queueLen --;
 		}
+
+	}
+
+	IEnumerator shovelFire(){
+
+
 		
 		if (!canFire) {
 			return false;
@@ -230,13 +239,19 @@ public class PlayerController : MonoBehaviour {
 		
 		canFire = false;
 
-		yield return new WaitForSeconds(.1f);
+		yield return new WaitForSeconds(.3f);
 
-		fireProjectile(snowball, shovelVelocity, 4, true);
+		fireProjectile(snowball, shovelVelocity, 5, true);
 		
-		yield return new WaitForSeconds(.5f);
+		yield return new WaitForSeconds(1.3f);
 		
 		canFire = true;
+
+		while (queueLen >= maxBalls) {
+			GameObject trash = (GameObject)SnowballQueue.Dequeue();
+			Destroy(trash);
+			queueLen --;
+		}
 
 	}
 
@@ -247,11 +262,6 @@ public class PlayerController : MonoBehaviour {
 
 	IEnumerator mittenFire(){
 
-		while (queueLen >= maxBalls) {
-			GameObject trash = (GameObject)SnowballQueue.Dequeue();
-			Destroy(trash);
-			queueLen --;
-		}
 
 		if (!canFire) {
 			return false;
@@ -266,6 +276,13 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds(.8f);
 
 		canFire = true;
+
+		while (queueLen >= maxBalls) {
+			GameObject trash = (GameObject)SnowballQueue.Dequeue();
+			Destroy(trash);
+			queueLen --;
+		}
+
 
 	}
 }

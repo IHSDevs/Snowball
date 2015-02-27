@@ -4,7 +4,7 @@ using System;
 public class ProjectileController : MonoBehaviour {
 
 	public Transform myTransform;
-	public bool start = true;
+	public bool start, penetrative;
 
 	public int damage;
 
@@ -29,13 +29,16 @@ public class ProjectileController : MonoBehaviour {
 
 	void collisionAction(Transform other)
 	{
-		start = false;
+		if (!((other.transform.gameObject.layer == 12) && penetrative)) {
 
-		myTransform.position = hit.collider.ClosestPointOnBounds(myTransform.position + myVelocity.normalized*hit.distance);
-		myTransform.parent = other.parent;
+			start = false;
+			myTransform.position = hit.collider.ClosestPointOnBounds(myTransform.position + myVelocity.normalized*hit.distance);
+			myTransform.parent = other.parent;
+			Destroy (myTransform.rigidbody);
+			Destroy (myTransform.collider);
 
-		Destroy (myTransform.rigidbody);
-		Destroy (myTransform.collider);
+		}
+
 
 		try 
 		{
