@@ -7,8 +7,8 @@ public class ProjectObject : MonoBehaviour {
 	void Start () {
 		Vector3 myVelocity = new Vector3 (Random.Range (-3, 3), Random.Range (4, 8), Random.Range (-3, 3));
 		Vector3 myAngularVelocity = new Vector3 (Random.Range (-3, 3), Random.Range (3, 3), Random.Range (-3, 3));
-		transform.rigidbody.velocity = myVelocity;
-		transform.rigidbody.angularVelocity = myAngularVelocity;
+		transform.GetComponent<Rigidbody>().velocity = myVelocity;
+		transform.GetComponent<Rigidbody>().angularVelocity = myAngularVelocity;
 
 
 

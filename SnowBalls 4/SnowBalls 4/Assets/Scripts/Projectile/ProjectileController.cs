@@ -34,8 +34,8 @@ public class ProjectileController : MonoBehaviour {
 			start = false;
 			myTransform.position = hit.collider.ClosestPointOnBounds(myTransform.position + myVelocity.normalized*hit.distance);
 			myTransform.parent = other.parent;
-			Destroy (myTransform.rigidbody);
-			Destroy (myTransform.collider);
+			Destroy (myTransform.GetComponent<Rigidbody>());
+			Destroy (myTransform.GetComponent<Collider>());
 
 		}
 
@@ -54,7 +54,7 @@ public class ProjectileController : MonoBehaviour {
 	void resolveCollision()
 	{
 		if (start) {
-			myVelocity = myTransform.rigidbody.velocity;
+			myVelocity = myTransform.GetComponent<Rigidbody>().velocity;
 
 			//orients towards myTransform position during next frame
 			Vector3 targetRotation = myVelocity * Time.deltaTime;

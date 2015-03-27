@@ -183,12 +183,12 @@ public class SnowmanController : MonoBehaviour {
 		body.gameObject.AddComponent<Rigidbody> ();
 		legs.gameObject.AddComponent<Rigidbody> ();
 
-		body.rigidbody.freezeRotation = true;
-		legs.rigidbody.freezeRotation = true;
+		body.GetComponent<Rigidbody>().freezeRotation = true;
+		legs.GetComponent<Rigidbody>().freezeRotation = true;
 
-		head.rigidbody.mass = .0000001f;
-		body.rigidbody.mass = .0000001f;
-		legs.rigidbody.mass = .0000001f;
+		head.GetComponent<Rigidbody>().mass = .0000001f;
+		body.GetComponent<Rigidbody>().mass = .0000001f;
+		legs.GetComponent<Rigidbody>().mass = .0000001f;
 
 		yield return new WaitForSeconds(1f);
 

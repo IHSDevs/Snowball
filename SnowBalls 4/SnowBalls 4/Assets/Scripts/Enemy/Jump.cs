@@ -79,7 +79,7 @@ public class Jump : MonoBehaviour {
 			jumpDirection = (waypoint - transform.position);
 			jumpDirection.y = 0;
 			
-			transform.rigidbody.velocity = Vector3.zero;
+			transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
 			
 			jumpVector = Quaternion.AngleAxis(-(jumpAngle), Vector3.Cross(Vector3.up, jumpDirection) ) *jumpDirection.normalized*jumpMagnitude;
 			

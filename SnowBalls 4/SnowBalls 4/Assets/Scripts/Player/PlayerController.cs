@@ -80,22 +80,22 @@ public class PlayerController : MonoBehaviour {
 	void CheckFire () {
 		if (isMobile) {
 			if (Input.touchCount > 1) {
-				animationList.animation.Play ("ThrowBall");
+				animationList.GetComponent<Animation>().Play ("ThrowBall");
 				StartCoroutine ("icicleFire");
 			}
 		}
 		else {
 			if (Input.GetButtonDown ("Fire1")) {
 				if (activeWeapon == 3) {
-					animationList.animation.Play ("ThrowBall");
+					animationList.GetComponent<Animation>().Play ("ThrowBall");
 					StartCoroutine ("mittenFire");
 				}
 				else if (activeWeapon == 1) {
-					animationList.animation.Play ("ThrowBall");
+					animationList.GetComponent<Animation>().Play ("ThrowBall");
 					StartCoroutine ("icicleFire");
 				}
 				else if (activeWeapon == 2) {
-					animationList.animation.Play ("ThrowBall");
+					animationList.GetComponent<Animation>().Play ("ThrowBall");
 					StartCoroutine ("shovelFire");
 				}
 			}
@@ -105,8 +105,8 @@ public class PlayerController : MonoBehaviour {
 	//Updates Player
 	void Update () {
 
-		if (activeWeapon == 3 && !(animationList.animation.IsPlaying("ThrowBall"))) {
-			animationList.animation.Rewind("ThrowBall");
+		if (activeWeapon == 3 && !(animationList.GetComponent<Animation>().IsPlaying("ThrowBall"))) {
+			animationList.GetComponent<Animation>().Rewind("ThrowBall");
 		}
 
 		Rotate();
@@ -179,7 +179,7 @@ public class PlayerController : MonoBehaviour {
 			Transform t = Instantiate(projectile, mainCamera.transform.position + transformShift, Camera.main.transform.rotation) as Transform;
 
 			GameObject objectClone = t.gameObject;
-			objectClone.rigidbody.velocity = mainCamera.transform.forward*velocity;
+			objectClone.GetComponent<Rigidbody>().velocity = mainCamera.transform.forward*velocity;
 			
 			SnowballQueue.Enqueue (objectClone);
 			queueLen ++;

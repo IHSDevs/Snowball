@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ProjectileCounter : MonoBehaviour {
 
+	public SnowmanController mySnowmanController;
+
 	int accruedDamage = 0;
 
 	public void Damage(int dmg) {
@@ -15,4 +17,5 @@ public class ProjectileCounter : MonoBehaviour {
 		accruedDamage = 0;
 		return dmg;
 	}
+
 }
